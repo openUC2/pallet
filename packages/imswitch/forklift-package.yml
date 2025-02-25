@@ -1,0 +1,13 @@
+package:
+  description: Microscope control server
+  maintainers:
+    - name: Ethan Li
+      email: lietk12@gmail.com
+    - name: Benedict Diederich
+      email: benedictdied@gmail.com
+  license: GPL-3.0-only
+  sources:
+    - https://github.com/ImSwitch/ImSwitch
+
+deployment:
+  compose-files: [compose.yml]
