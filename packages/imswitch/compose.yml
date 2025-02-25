@@ -1,0 +1,22 @@
+services:
+  imswitch-docker-arm64-noqt:
+    image: ghcr.io/openuc2/imswitch-noqt-arm64:latest
+    privileged: true
+    ports:
+      - "3000:3000"
+      - "8002:8002"
+      - "8001:8001"
+      - "8888:8888"
+      - "2222:22"
+    volumes:
+      - ~/Downloads:/config
+      - ~/Downloads:/dataset
+    environment:
+      - HEADLESS=1
+      - HTTP_PORT=8001
+      - CONFIG_FILE=example_virtual_microscope.json
+      - UPDATE_GIT=1
+      - UPDATE_CONFIG=0
+      - DATA_PATH=/dataset
+      - CONFIG_PATH=/config
+    restart: always

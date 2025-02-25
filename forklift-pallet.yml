@@ -1,0 +1,6 @@
+forklift-version: v0.5.2
+
+pallet:
+  path: github.com/openUC2/pallet
+  description: Standard pallet for OpenUC2 operating system
+  readme-file: README.md

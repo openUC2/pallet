@@ -1,0 +1,6 @@
+forklift-version: v0.4.0
+
+repository:
+  path: github.com/openUC2/pallet
+  description: Standard packages for OpenUC2 operating system
+  readme-file: README.md

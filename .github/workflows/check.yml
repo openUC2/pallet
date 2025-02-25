@@ -1,0 +1,41 @@
+name: check
+
+on:
+  push:
+    branches:
+      - main
+      - edge
+      - beta
+      - stable
+  pull_request:
+    types:
+      - opened
+      - synchronize
+      - reopened
+      - auto_merge_enabled  # needed for PRs opened via CI workflows without PATs
+  merge_group:
+  workflow_dispatch:
+
+jobs:
+  ci:
+    strategy:
+      fail-fast: false
+      matrix:
+        forklift-version: [0.5.3, 0.7.2, 0.7.2-alpha.6]
+    runs-on: ubuntu-24.04-arm
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Forklift
+        uses: PlanktoScope/setup-forklift@v1
+        with:
+          version: ${{ matrix.forklift-version }}
+
+      - name: Run Forklift checks
+        run: forklift dev plt check
+
+      - name: Make Forklift deployment plan
+        run: forklift dev plt plan
