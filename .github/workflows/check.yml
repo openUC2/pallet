@@ -34,6 +34,12 @@ jobs:
         with:
           version: ${{ matrix.forklift-version }}
 
+      - name: Cache Forklift pallets
+        run: |
+          mkdir -p $HOME/.forklift
+          forklift dev plt cache-plt
+          forklift dev plt cache-dl
+
       - name: Run Forklift checks
         run: forklift dev plt check
 
