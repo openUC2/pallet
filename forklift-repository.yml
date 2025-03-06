@@ -1,4 +1,4 @@
-forklift-version: v0.4.0
+forklift-version: v0.8.0-alpha.7
 
 repository:
   path: github.com/openUC2/pallet

@@ -1,0 +1,9 @@
+package: /packages/core/host/cockpit
+features:
+  - allow-unencrypted
+  - allow-origins-planktoscope-static-ips
+  - allow-origins-templated-custom-domain-home
+  - allow-origins-templated-mdns-hostname
+  - firewall-allow-direct
+  - firewall-allow-public
+disabled: false
