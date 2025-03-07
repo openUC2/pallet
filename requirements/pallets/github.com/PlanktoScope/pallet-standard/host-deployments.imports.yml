@@ -1,4 +1,5 @@
 modifiers:
+  - target: /deployments/host/docker.deploy.yml
   - target: /deployments/host/machine-name.deploy.yml
   - target: /deployments/host/sshd.deploy.yml
   - target: /deployments/host/networking
