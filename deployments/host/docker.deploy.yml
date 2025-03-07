@@ -1,0 +1,5 @@
+package: /packages/core/host/docker
+features:
+  - start-before-network-online
+  - firewall-zone
+disabled: false
