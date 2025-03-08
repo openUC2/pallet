@@ -1,0 +1,79 @@
+---
+name: updatecli-forklift
+
+on:
+  push:
+    branches:
+      - main
+      - edge
+  workflow_dispatch:
+  schedule:
+    - cron: '0 16 * * *'  # 16:00 UTC every day
+
+env:
+  REPO_OWNER: ${{ github.repository_owner }}
+  REPO_NAME: ${{ github.event.repository.name }}
+  COMMITTER_USERNAME: "updatecli[bot]"
+  COMMITTER_EMAIL: "${{ github.repository_id }}+updatecli[bot]@users.noreply.forklift.run"
+  FORKLIFT_VERSION: 0.8.0-alpha.5
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  forklift-requirements:
+    env:
+      UPDATECLI_COMPOSE: /tmp/forklift-pallets.updatecli-compose.yml
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        type: [pallets, repos]
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup updatecli
+        uses: updatecli/updatecli-action@v2
+
+      - name: Setup Forklift
+        uses: PlanktoScope/setup-forklift@v1
+        with:
+          version: ${{ env.FORKLIFT_VERSION }}
+
+      - name: Cache Forklift requirements
+        run: |
+          forklift dev plt cache-plt
+          forklift dev plt cache-repo
+
+      - name: Generate updatecli compose file
+        id: generate-compose
+        run: |
+          UPDATECLI_COMPOSE="$(mktemp -t 'updatecli-compose-XXXXX.yml')"
+          echo "UPDATECLI_COMPOSE=$UPDATECLI_COMPOSE" >> $GITHUB_ENV
+
+          .github/generate-forklift-updatecli-compose.sh \
+            "$(pwd)" \
+            ".github/forklift.updatecli-compose.yqtempl" \
+            "${{ matrix.type }}" \
+            "$UPDATECLI_COMPOSE"
+
+          num_policies="$(yq '.policies | length' "$UPDATECLI_COMPOSE")"
+          echo "$num_policies policies were generated."
+          if [[ "$num_policies" > 0 ]]; then
+            echo "has-policies=true" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Dry-run updates
+        if: ${{ steps.generate-compose.outputs.has-policies }}
+        run: CWD="$(pwd)" updatecli compose diff --file "${{ env.UPDATECLI_COMPOSE }}"
+        env:
+          GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
+
+      - name: Apply updates
+        if: ${{ steps.generate-compose.outputs.has-policies }}
+        run: CWD="$(pwd)" updatecli compose apply --file "${{ env.UPDATECLI_COMPOSE }}"
+        env:
+          GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"

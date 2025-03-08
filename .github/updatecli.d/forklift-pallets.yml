@@ -1,0 +1,70 @@
+name: 'req-plt {{ .path }}@{{ index . "version-query" }}'
+
+scms:
+  pallet:
+    kind: github
+    spec:
+      owner: '{{ requiredEnv "REPO_OWNER" }}'
+      repository: '{{ requiredEnv "REPO_NAME" }}'
+      username: '{{ requiredEnv "GITHUB_ACTOR" }}'
+      branch: main
+      token: '{{ requiredEnv "GITHUB_TOKEN" }}'
+      user: '{{ requiredEnv "COMMITTER_USERNAME" }}'
+      email: '{{ requiredEnv "COMMITTER_EMAIL" }}'
+      commitusingapi: true # this allows commits to be signed
+
+actions:
+  pull-request:
+    scmid: pallet
+    kind: github/pullrequest
+    spec:
+      title: "build(forklift): bump required Forklift pallets"
+      labels:
+        - dependencies
+      mergemethod: squash
+
+sources:
+  current:
+    name: Current version of required pallet
+    kind: shell
+    spec:
+      environments:
+        - name: PATH # needed to find the forklift binary
+        - name: HOME # needed for Forklift to determine its default workspace path
+      command: forklift dev pallet show-pallet-version {{ .path }}
+  resolved:
+    name: Resolved version query
+    kind: shell
+    spec:
+      environments:
+        - name: PATH # needed to find the forklift binary
+        - name: HOME # needed for Forklift to determine its default workspace path
+      command: forklift inspector resolve-git-repo {{ .path }}@{{ index . "version-query" }}
+
+conditions:
+  # TODO: add a condition check for whether the resolved version string appears to be a valid version string (maybe add a forklift inspector subcommand for this)
+  changed:
+    name: Version change available
+    kind: shell
+    disablesourceinput: true
+    dependson:
+      - source#current
+      - source#resolved
+    spec:
+      command: test "{{ source "current" }}" != "{{ source "resolved" }}"
+
+targets:
+  pallet:
+    name: 'bump {{ .path }} from {{ source "current" }} to {{ source "resolved" }}'
+    kind: shell
+    disablesourceinput: true
+    scmid: pallet
+    dependson:
+      - source#current
+      - source#resolved
+      - condition#changed
+    spec:
+      environments:
+        - name: PATH # needed to find the forklift binary
+        - name: HOME # needed for Forklift to determine its default workspace path
+      command: '{{ requiredEnv "CWD" }}/.github/forklift-require.sh pallet {{ .path }} {{ index . "version-query" }}'
