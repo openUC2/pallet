@@ -15,7 +15,7 @@ env:
   REPO_NAME: ${{ github.event.repository.name }}
   COMMITTER_USERNAME: "updatecli[bot]"
   COMMITTER_EMAIL: "${{ github.repository_id }}+updatecli[bot]@users.noreply.forklift.run"
-  FORKLIFT_VERSION: 0.8.0-alpha.5
+  FORKLIFT_VERSION: 0.8.0-alpha.7
 
 permissions:
   contents: write
