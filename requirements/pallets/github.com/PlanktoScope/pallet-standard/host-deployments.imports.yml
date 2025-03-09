@@ -1,8 +1,12 @@
 modifiers:
-  - target: /deployments/host/docker.deploy.yml
-  - target: /deployments/host/machine-name.deploy.yml
-  - target: /deployments/host/sshd.deploy.yml
-  - target: /deployments/host/networking
+  - type: add
+    target: /deployments/host
+    only-matching-any:
+      - docker.deploy.yml
+      - machine-name.deploy.yml
+      - sshd.deploy.yml
+  - type: add
+    target: /deployments/host/networking
   - type: remove
     target: /deployments/host/networking
     only-matching-any:
