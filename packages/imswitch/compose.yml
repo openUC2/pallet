@@ -9,7 +9,7 @@ services:
       - "8888:8888"
       - "2222:22"
     volumes:
-      - ~/Downloads:/config
+      - ~/:/config
       - ~/Downloads:/dataset
     environment:
       - HEADLESS=1
