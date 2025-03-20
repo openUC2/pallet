@@ -14,8 +14,7 @@ services:
     environment:
       - HEADLESS=1
       - HTTP_PORT=8001
-      - CONFIG_FILE=example_virtual_microscope.json
-      - UPDATE_GIT=1
+      - UPDATE_GIT=0
       - UPDATE_CONFIG=0
       - DATA_PATH=/dataset
       - CONFIG_PATH=/config
