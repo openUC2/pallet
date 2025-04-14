@@ -10,7 +10,7 @@ package:
 deployment:
   provides:
     file-exports:
-      - description: systemd service to move the contents of `/boot/init-root` during boot
+      - description: systemd service to move the contents of `/boot/firmware/init-root` during boot
         target: overlays/usr/lib/systemd/system/boot-init-root.service
       - description: systemd service enablement for boot-init-root.service
         target: overlays/etc/systemd/system/multi-user.target.wants/boot-init-root.service

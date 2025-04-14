@@ -1,10 +1,10 @@
 [Unit]
-Description=Move files from `/boot/init-root` into the root filesystem
-ConditionPathExistsGlob=/boot/init-root/*
+Description=Move files from `/boot/firmware/init-root` into the root filesystem
+ConditionPathExistsGlob=/boot/firmware/init-root/*
 
 [Service]
 Type=oneshot
-ExecStart=sh -c 'mv /boot/init-root/* /'
+ExecStart=sh -c 'mv /boot/firmware/init-root/* /'
 Restart=no
 
 [Install]
