@@ -1,0 +1,11 @@
+[Unit]
+Description=Move files from `/boot/init-root` into the root filesystem
+ConditionPathExistsGlob=/boot/init-root/*
+
+[Service]
+Type=oneshot
+ExecStart=sh -c 'mv /boot/init-root/* /'
+Restart=no
+
+[Install]
+WantedBy=multi-user.target
