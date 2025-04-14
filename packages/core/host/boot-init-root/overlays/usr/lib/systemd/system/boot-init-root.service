@@ -1,0 +1,12 @@
+[Unit]
+Description=Move files from /boot/firmware/init-root into the root filesystem
+ConditionPathExistsGlob=/boot/firmware/init-root/*
+
+[Service]
+Type=oneshot
+ExecStart=sh -c 'cp -r /boot/firmware/init-root/* /'
+ExecStartPost=sh -c 'rm -rf /boot/firmware/init-root/*'
+Restart=no
+
+[Install]
+WantedBy=multi-user.target
