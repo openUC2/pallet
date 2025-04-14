@@ -1,0 +1,17 @@
+package:
+  description: Automatically sets the Tailscale client's auth key
+  maintainers:
+    - name: Ethan Li
+      email: lietk12@gmail.com
+  license: Apache-2.0
+  sources:
+    # Auto-generation scripts (Apache-2.0):
+    - https://github.com/openUC2/pallet
+
+deployment:
+  provides:
+    file-exports:
+      - description: systemd service to set the Tailscale auth key during boot
+        target: overlays/usr/lib/systemd/system/tailscale-add-auth-key.service
+      - description: systemd service enablement for tailscale-add-auth-key.service
+        target: overlays/etc/systemd/system/multi-user.target.wants/tailscale-add-auth-key.service
