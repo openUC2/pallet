@@ -4,6 +4,7 @@ modifiers:
     only-matching-any:
       - docker.deploy.yml
       - machine-name.deploy.yml
+      - config-templating.deploy.yml
       - sshd.deploy.yml
   - type: add
     target: /deployments/host/networking
