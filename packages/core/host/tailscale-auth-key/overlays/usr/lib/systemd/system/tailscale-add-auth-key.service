@@ -1,0 +1,12 @@
+[Unit]
+Description=Set the tailscale client's auth key from /run/tailscale-auth-key
+ConditionPathExists=/run/tailscale-auth-key
+Requires=tailscaled.service
+After=tailscaled.service
+
+[Service]
+Type=oneshot
+ExecStart=sh -c 'tailscale up --authkey "$(cat /run/tailscale-auth-key)"'
+
+[Install]
+WantedBy=multi-user.target
