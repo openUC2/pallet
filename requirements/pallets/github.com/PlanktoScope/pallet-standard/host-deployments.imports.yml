@@ -6,3 +6,9 @@ modifiers:
       - machine-name.deploy.yml
       - config-templating.deploy.yml
       - sshd.deploy.yml
+  - type: add
+    target: /deployments/host/networking
+  - type: remove
+    target: /deployments/host/networking
+    only-matching-any:
+      - avahi-cname.deploy.yml
