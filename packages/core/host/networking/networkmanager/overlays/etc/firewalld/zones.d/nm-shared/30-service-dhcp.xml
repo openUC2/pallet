@@ -1,0 +1,3 @@
+  <service name="dhcp"/>
+  <service name="dhcpv6"/>
+  <service name="dhcpv6-client"/>

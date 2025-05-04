@@ -1,0 +1,12 @@
+[Unit]
+Description=Generate a report of MAC addresses of all network interfaces
+ConditionFileIsExecutable=/usr/libexec/report-mac-addresses
+Wants=network-online.target
+After=network-online.target
+
+[Service]
+Type=oneshot
+ExecStart=/usr/libexec/report-mac-addresses
+
+[Install]
+WantedBy=multi-user.target

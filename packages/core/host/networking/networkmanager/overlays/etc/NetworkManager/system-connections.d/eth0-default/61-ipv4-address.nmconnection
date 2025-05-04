@@ -1,0 +1,3 @@
+# self-assign the PlanktoScope-associated IP address so that it's available for interface forwarding
+# of inbound packets even if the upstream network router dynamically assigns an IP address via DHCP:
+address1=192.168.5.1/24

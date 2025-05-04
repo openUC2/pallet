@@ -1,0 +1,45 @@
+package:
+  description: Avahi daemon ambiently provided by the OS
+  maintainers:
+    - name: Ethan Li
+      email: lietk12@gmail.com
+  license: LGPL-2.1-only
+  sources:
+    - https://github.com/avahi/avahi
+
+host:
+  provides:
+    listeners:
+      - description: mDNS messaging
+        port: 5353
+        protocol: udp
+
+features:
+  firewall-allow-direct:
+    description:
+      Firewall configuration to allow mDNS traffic from directly-connected devices
+    requires:
+      filesets:
+        - description: Drop-in directory for XML fragment files to generate the nm-shared zone definition
+          tags:
+            - drop-in-assembly
+          paths:
+            - /etc/firewalld/zones.d/nm-shared
+    provides:
+      file-exports:
+        - description: Drop-in XML fragment for firewalld's mDNS service
+          target: overlays/etc/firewalld/zones.d/nm-shared/41-service-mdns.xml
+  firewall-allow-public:
+    description:
+      Firewall configuration to allow public mDNS traffic
+    requires:
+      filesets:
+        - description: Drop-in directory for XML fragment files to generate the public zone definition
+          tags:
+            - drop-in-assembly
+          paths:
+            - /etc/firewalld/zones.d/public
+    provides:
+      file-exports:
+        - description: Drop-in XML fragment for firewalld's mDNS service
+          target: overlays/etc/firewalld/zones.d/public/41-service-mdns.xml

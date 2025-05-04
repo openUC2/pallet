@@ -1,0 +1,28 @@
+package:
+  description: System service to report network interface MAC addresses
+  maintainers:
+    - name: Ethan Li
+      email: lietk12@gmail.com
+  license: Apache-2.0
+  sources:
+    - https://github.com/PlanktoScope/pallet-standard
+
+deployment:
+  provides:
+    file-exports:
+      - description: Shell script to generate a report of the MAC addresses of all network interfaces
+        target: overlays/usr/libexec/report-mac-addresses
+      - description: systemd service to run the report-mac-addresses script at boot
+        target: overlays/usr/lib/systemd/system/report-mac-addresses.service
+      - description: systemd service enablement for report-mac-addresses.service
+        target: overlays/etc/systemd/system/multi-user.target.wants/report-mac-addresses.service
+
+features:
+  periodic-updates:
+    description: Periodically update the report of MAC addresses every two minutes
+    provides:
+      file-exports:
+        - description: systemd timer to run the report-mac-addresses service periodically
+          target: overlays/usr/lib/systemd/system/report-mac-addresses.timer
+        - description: systemd timer enablement for report-mac-addresses.timer
+          target: overlays/etc/systemd/system/timers.target.wants/report-mac-addresses.timer

@@ -1,0 +1,6 @@
+#!/bin/bash -eu
+
+zone="$1"
+
+mkdir -p /run/overlays/generated/etc/firewalld/zones
+cat "/etc/firewalld/zones.d/$zone/"* >"/run/overlays/generated/etc/firewalld/zones/$zone.xml"
