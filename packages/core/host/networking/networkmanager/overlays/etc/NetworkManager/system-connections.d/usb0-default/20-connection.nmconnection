@@ -1,5 +1,0 @@
-
-[connection]
-id=usb0-default
-type=ethernet
-interface-name=usb0

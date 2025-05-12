@@ -1,9 +1,0 @@
-[Unit]
-Description=Run the report-mac-addresses service periodically in case the connected network interfaces change
-
-[Timer]
-OnUnitActiveSec=2min
-OnUnitInactiveSec=1min
-
-[Install]
-WantedBy=timers.target

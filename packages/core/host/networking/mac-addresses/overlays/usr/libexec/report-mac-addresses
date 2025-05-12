@@ -1,9 +1,0 @@
-#!/usr/bin/bash
-
-OUTPUT_FILE="/run/mac-addresses.yml"
-echo "# This is an auto-generated file! Any changes you make here will be overwritten." >"$OUTPUT_FILE"
-
-cd /sys/class/net/
-for i in *; do
-  printf '"%s": "%s"\n' "$i" "$(cat "$i/address")" >>"$OUTPUT_FILE"
-done

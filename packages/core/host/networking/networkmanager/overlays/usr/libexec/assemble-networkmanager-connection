@@ -1,7 +1,0 @@
-#!/bin/bash -eu
-
-connection="$1"
-
-mkdir -p /run/overlays/generated/etc/NetworkManager/system-connections
-cat "/etc/NetworkManager/system-connections.d/$connection/"* >"/run/overlays/generated/etc/NetworkManager/system-connections/$connection.nmconnection"
-sudo chmod 0600 "/run/overlays/generated/etc/NetworkManager/system-connections/$connection.nmconnection"

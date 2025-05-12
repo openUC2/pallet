@@ -1,5 +1,0 @@
-
-[connection]
-id=eth0-default
-type=ethernet
-interface-name=eth0

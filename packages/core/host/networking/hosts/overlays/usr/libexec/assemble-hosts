@@ -1,3 +1,0 @@
-#!/bin/bash -eu
-
-cat /etc/hosts.d/* > /run/overlays/generated/etc/hosts
