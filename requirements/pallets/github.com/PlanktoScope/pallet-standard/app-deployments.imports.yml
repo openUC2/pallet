@@ -4,3 +4,4 @@ modifiers:
     only-matching-any:
       - filebrowser-root.deploy.yml
       - dozzle.deploy.yml
+      - cockpit.deploy.yml
