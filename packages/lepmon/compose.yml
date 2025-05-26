@@ -1,5 +1,5 @@
 services:
-  imswitch-docker-arm64-noqt:
+  server:
     image: ghcr.io/desboe/lepmonos:arm64-latest 
     privileged: true
     ports:
@@ -13,5 +13,4 @@ services:
       - /home/pi/:/dataset
       - /tmp:/tmp
       - /home/pi/LepmonOS:/home/pi/LepmonOS
-    environment:
     restart: always
