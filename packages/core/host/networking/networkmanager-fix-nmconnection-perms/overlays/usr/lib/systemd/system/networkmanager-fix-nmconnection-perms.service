@@ -7,7 +7,7 @@ Before=NetworkManager.service
 [Service]
 Type=oneshot
 ExecStart=bash -c -e '\
-  for file in /etc/NetworkManager/system-connections/*.nmconnection; do; \
+  for file in /etc/NetworkManager/system-connections/*.nmconnection; do \
     if [ -L "$file" ]; then; \
       continue; \
     fi; \
