@@ -8,9 +8,7 @@ Before=NetworkManager.service
 Type=oneshot
 ExecStart=bash -c -e '\
   for file in /etc/NetworkManager/system-connections/*.nmconnection; do \
-    if [ -L "$file" ]; then; \
-      continue; \
-    fi; \
+    if [ -L "$file" ]; then continue; fi; \
     chown root:root "$file"; \
     chmod 600 "$file"; \
   done \
