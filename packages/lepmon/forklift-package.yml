@@ -1,0 +1,13 @@
+package:
+  description: Timelapse acquisition system "Lepmon"
+  maintainers:
+    - name: Benedict Diederich
+      email: benedictdied@gmail.com
+    - name: Dennis Böttger
+      email: desboe@gmail.com
+  license: GPL-3.0-only
+  sources:
+    - https://github.com/desboe/lepmonos
+
+deployment:
+  compose-files: [compose.yml]
