@@ -1,0 +1,16 @@
+package:
+  description: Automatically fixes incorrect file permission flags on NetworkManager connection files
+  maintainers:
+    - name: Ethan Li
+      email: lietk12@gmail.com
+  license: Apache-2.0
+  sources:
+    - https://github.com/openUC2/pallet
+
+deployment:
+  provides:
+    file-exports:
+      - description: systemd service to set fix incorrect file permission flags for NetworkManager connection profiles during boot
+        target: overlays/usr/lib/systemd/system/networkmanager-fix-nmconnection-perms.service
+      - description: systemd service enablement for networkmanager-fix-nmconnection-perms.service
+        target: overlays/etc/systemd/system/NetworkManager.service.wants/networkmanager-fix-nmconnection-perms.service

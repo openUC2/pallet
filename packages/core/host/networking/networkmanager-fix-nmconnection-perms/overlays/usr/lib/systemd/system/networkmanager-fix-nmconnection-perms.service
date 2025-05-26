@@ -1,0 +1,18 @@
+[Unit]
+Description=Fix incorrect file permission flags for any NetworkManager connection profile files
+ConditionPathExists=/etc/NetworkManager/system-connections
+After=boot-init-root.service
+Before=NetworkManager.service
+
+[Service]
+Type=oneshot
+ExecStart=bash -c -e '\
+  for file in /etc/NetworkManager/system-connections/*.nmconnection; do \
+    if [ -L "$file" ]; then continue; fi; \
+    chown root:root "$file"; \
+    chmod 600 "$file"; \
+  done \
+'
+
+[Install]
+WantedBy=NetworkManager.service
