@@ -1,5 +1,5 @@
 services:
-  imswitch-docker-arm64-noqt:
+  lepmonos:
     image: ghcr.io/desboe/lepmonos:arm64-latest 
     privileged: true
     ports:
