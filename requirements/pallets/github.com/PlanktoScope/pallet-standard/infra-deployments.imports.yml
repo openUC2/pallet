@@ -1,0 +1,5 @@
+modifiers:
+  - type: add
+    target: /deployments/infra
+    only-matching-any:
+      - caddy-ingress.deploy.yml
