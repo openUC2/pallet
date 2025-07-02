@@ -4,6 +4,7 @@ features:
   - allow-origins-planktoscope-static-ips
   - allow-origins-templated-custom-domain-home
   - allow-origins-templated-mdns-hostname
+  - allow-origins-templated-hostname
   - firewall-allow-direct
   - firewall-allow-public
 disabled: false
