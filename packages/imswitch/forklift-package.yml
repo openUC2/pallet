@@ -11,3 +11,37 @@ package:
 
 deployment:
   compose-files: [compose.yml]
+
+features:
+  firewall-allow-direct:
+    description:
+      Firewall configuration to allow requests from directly-connected devices
+    requires:
+      filesets:
+        - description: Drop-in directory for XML fragment files to generate the nm-shared zone definition
+          tags:
+            - drop-in-assembly
+          paths:
+            - /etc/firewalld/zones.d/nm-shared
+    provides:
+      file-exports:
+        - description: Definition for firewalld's imswitch service
+          target: overlays/etc/firewalld/services/imswitch.xml
+        - description: Drop-in XML fragment for firewalld's imswitch service
+          target: overlays/etc/firewalld/zones.d/nm-shared/70-service-imswitch.xml
+  firewall-allow-public:
+    description:
+      Firewall configuration to allow public requests
+    requires:
+      filesets:
+        - description: Drop-in directory for XML fragment files to generate the public zone definition
+          tags:
+            - drop-in-assembly
+          paths:
+            - /etc/firewalld/zones.d/public
+    provides:
+      file-exports:
+        - description: Definition for firewalld's imswitch service
+          target: overlays/etc/firewalld/services/imswitch.xml
+        - description: Drop-in XML fragment for firewalld's imswitch service
+          target: overlays/etc/firewalld/zones.d/public/70-service-imswitch.xml
