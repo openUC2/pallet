@@ -1,0 +1,7 @@
+services:
+  server:
+    volumes:
+      - type: bind
+        source: /run/machine-name
+        target: /run/machine-name
+        read_only: true

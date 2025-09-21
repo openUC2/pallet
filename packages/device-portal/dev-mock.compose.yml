@@ -1,0 +1,4 @@
+services:
+  server:
+    environment:
+      - MACHINENAME_NAME=dev-machine
