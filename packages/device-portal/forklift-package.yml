@@ -1,0 +1,45 @@
+package:
+  description: Landing page for easy access to deployed browser applications
+  maintainers:
+    - name: Ethan Li
+      email: lietk12@gmail.com
+  license: Apache-2.0
+  sources:
+    - https://github.com/openUC2/device-portal
+
+deployment:
+  compose-files:
+    - deployment.compose.yml
+
+features:
+  frontend:
+    description: Provides access to a browser landing page
+    compose-files:
+      - frontend.compose.yml
+    requires:
+      networks:
+        - description: Overlay network for Caddy to connect to upstream services
+          name: caddy-ingress
+      services:
+        - tags: [caddy-docker-proxy]
+          port: 80
+          protocol: http
+    provides:
+      services:
+        - description: Landing page for the PlanktoScope's network services
+          port: 80
+          protocol: http
+          paths:
+            - /
+            - /favicon.ico
+            - /app/*
+            - /static/*
+            - /fonts/*
+  deploy-rpi:
+    description: Integrates with Imswitch OS
+    compose-files:
+      - deploy-rpi.compose.yml
+  dev-mock:
+    description: Provides a fake machine name, to enable development & testing outside ImSwitch OS
+    compose-files:
+      - dev-mock.compose.yml
