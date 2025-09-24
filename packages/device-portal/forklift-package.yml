@@ -5,7 +5,10 @@ package:
       email: lietk12@gmail.com
   license: Apache-2.0
   sources:
+    # Forklift-deployed software (MIT):
     - https://github.com/openUC2/device-portal
+    # Templates (Apache-2.0):
+    - https://github.com/openUC2/pallet
 
 deployment:
   compose-files:
