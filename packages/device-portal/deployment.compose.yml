@@ -1,6 +1,13 @@
 services:
   server:
-    image: ghcr.io/openuc2/device-portal:0.1.0@sha256:24a24915b417542c2585e25baa6b44f9e3e3bc14e0b72c076c323799fda41d53
+    image: ghcr.io/openuc2/device-portal:0.1.1-alpha.1
+    environment:
+      - TEMPLATES_PATH=/web/templates
+    volumes:
+      - type: bind
+        source: ./templates
+        target: /web/templates
+        read_only: true
 networks:
   default:
     name: none
