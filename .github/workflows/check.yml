@@ -22,9 +22,14 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        forklift-version: 
-          - 0.8.0-beta.0
-    runs-on: ubuntu-24.04-arm
+        forklift-version:
+          - 0.8.0
+        platform:
+          - runner: ubuntu-24.04-arm
+            arch: arm64
+          - runner: ubuntu-24.04
+            arch: amd64
+    runs-on: ${{ matrix.platform.runner }}
     defaults:
       run:
         shell: bash
