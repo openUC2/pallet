@@ -1,0 +1,50 @@
+---
+name: updatecli-compose
+
+on:
+  push:
+    branches:
+      - main
+      - edge
+  workflow_dispatch:
+  schedule:
+    - cron: '0 16 * * *'  # 16:00 UTC every day
+
+env:
+  REPO_OWNER: ${{ github.repository_owner }}
+  REPO_NAME: ${{ github.event.repository.name }}
+  COMMITTER_USERNAME: "updatecli[bot]"
+  COMMITTER_EMAIL: "${{ github.repository_id }}+updatecli[bot]@users.noreply.forklift.run"
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  # Note(ethanjli): we don't use the updatecli config for auto-merging patch updates, because that
+  # would require either making a personal access token in the PlanktoScope organization or making a
+  # GitHub App and installing it in the PlanktoScope organization, and both options are not worth
+  # the administrative hassle (since I don't have access to do those things myself).
+
+  containers-pr:
+    env:
+      UPDATECLI_CONFIG: .github/updatecli.d/compose-containers-pr.yml
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup updatecli
+        uses: updatecli/updatecli-action@v2
+
+      - name: Dry-run updates
+        run: "updatecli diff --config ${{ env.UPDATECLI_CONFIG }}"
+        env:
+          GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
+
+      - name: Apply updates
+        run: "updatecli apply --config ${{ env.UPDATECLI_CONFIG }}"
+        env:
+          GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
