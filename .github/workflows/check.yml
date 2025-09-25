@@ -47,3 +47,70 @@ jobs:
 
       - name: Make Forklift deployment plan
         run: forklift dev plt plan
+
+      # PRE-CACHE CONTAINER IMAGES
+      # Because Docker Hub rate-limits container image pulls and we want to pull the same set of
+      # images many times for matrix checks, we pre-cache container images so that they can be
+      # reused across workflow runs.
+      # TODO: move some of this into a separate GitHub Action and/or Forklift command, to keep
+      # this workflow simpler
+
+      - name: Set up container image pre-caching
+        id: setup-precaching
+        run: |
+          mkdir -p /tmp/forklift/container-image-precache
+          echo "path=/tmp/forklift/container-image-precache" >> $GITHUB_OUTPUT
+          container_list_hash="$(forklift dev plt ls-img | sha256sum | cut -d ' ' -f 1)"
+          echo "container_list_hash=$container_list_hash" >> $GITHUB_OUTPUT
+
+      - name: Try to load container image pre-cache from GitHub Actions cache
+        id: restore-precache
+        uses: actions/cache/restore@v4
+        with:
+          key: "container-images-${{ matrix.platform.arch }}-${{ steps.setup-precaching.outputs.container_list_hash }}"
+          path: ${{ steps.setup-precaching.outputs.path }}
+
+      - name: Pre-download container images
+        env:
+          ARCH: ${{ matrix.platform.arch }}
+          PRECACHE_PATH: ${{ steps.setup-precaching.outputs.path }}
+        run: |
+          set -x
+          if [ -f "$PRECACHE_PATH/images-list" ]; then
+            echo "Pre-downloaded container images can be loaded from the GitHub Actions cache!"
+            exit 0
+          fi
+          forklift dev plt ls-img > "$PRECACHE_PATH/images-list"
+
+          echo "Downloading temporary tools to pre-download container images..."
+          tmp_bin="$(mktemp -d --tmpdir=/tmp bin.XXXXXXX)"
+          ".github/download-crane.sh" "$tmp_bin"
+          ".github/download-rush.sh" "$tmp_bin"
+
+          echo "Pre-downloading container images..."
+          export PATH="$tmp_bin:$PATH"
+          container_platform="linux/$ARCH"
+          rush ".github/precache-image.sh" {} "$PRECACHE_PATH" "$container_platform" \
+            < "$PRECACHE_PATH/images-list"
+
+      # We only use actions/cache/restore and actions/cache/save separately because actions/cache's
+      # save-always flag is broken: https://github.com/actions/cache/issues/1315 ; once that's
+      # fixed, we can simplify this job a bit.
+      - name: Save container image pre-cache to GitHub Actions cache
+        if: "!steps.restore-precache.outputs.cache-hit"
+        uses: actions/cache/save@v4
+        with:
+          key: "container-images-${{ matrix.platform.arch }}-${{ steps.setup-precaching.outputs.container_list_hash }}"
+          path: ${{ steps.setup-precaching.outputs.path }}
+
+      - name: Load cached container images into Docker
+        env:
+          PRECACHE_PATH: ${{ steps.setup-precaching.outputs.path }}
+        run: |
+          tmp_bin="$(mktemp -d --tmpdir=/tmp bin.XXXXXXX)"
+          ".github/download-rush.sh" "$tmp_bin"
+          export PATH="$tmp_bin:$PATH"
+          forklift dev plt ls-img | rush ".github/load-precached-image.sh" {} "$PRECACHE_PATH"
+
+      - name: Try to stage the pallet
+        run: forklift dev plt stage
