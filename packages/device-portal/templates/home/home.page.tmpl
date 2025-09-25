@@ -55,8 +55,18 @@
         <h2>Browser applications</h2>
         <ul>
           <li>
-            <strong><a href="//{{$hostname}}:8001/imswitch/index.html" target="_blank">ImSwitch dashboard</a></strong>:
-            Provides the standard user interface to operate the microscope
+            <p>
+              <strong><a href="//{{$hostname}}:8001/imswitch/index.html" target="_blank">
+                ImSwitch dashboard
+                {{- /* make template ignore the line break */ -}}
+              </a></strong>:
+              Provides the standard user interface to operate the microscope
+            </p>
+            <article class="message is-info">
+              <div class="message-body">
+                If you don't know where to go, you're probably looking for the above link!
+              </div>
+            </article>
           </li>
         </ul>
 
@@ -74,13 +84,11 @@
             {{if hasSuffix ".uc2" $hostname}}
               For example, the machine-specific URL for this machine is
               <a href="//{{$machineName}}.uc2">
-                {{- /* make template ignore the line break */ -}}
                 {{$machineName}}.uc2
                 {{- /* make template ignore the line break */ -}}
               </a>.
               Alternatively,
               <a href="//openuc2-{{$machineName}}.local">
-                {{- /* make template ignore the line break */ -}}
                 openuc2-{{$machineName}}.local
                 {{- /* make template ignore the line break */ -}}
               </a>
@@ -88,13 +96,11 @@
             {{else if hasSuffix ".local" $hostname}}
               For example, the machine-specific URL for this machine is
               <a href="//openuc2-{{$machineName}}.local">
-                {{- /* make template ignore the line break */ -}}
                 openuc2-{{$machineName}}.local
                 {{- /* make template ignore the line break */ -}}
               </a>.
               Alternatively,
               <a href="//{{$machineName}}.uc2">
-                {{- /* make template ignore the line break */ -}}
                 {{$machineName}}.uc2
                 {{- /* make template ignore the line break */ -}}
               </a>
@@ -207,11 +213,15 @@
         <h3 class="is-size-5">Network APIs</h3>
         <ul>
           <li>
-            <strong><a href="//{{$hostname}}:8001/api" target="_blank">ImSwitch API</a></strong>:
-            ImSwitch's HTTP API (useful for remote control)
+            <strong>ImSwitch HTTP API</a></strong>:
+            Provides an interface for programmatic and remote control of this machine at
+            <code>{{$hostname}}:8001</code>
           </li>
           <li>
-            <strong><a href="//{{$hostname}}:8001/docs" target="_blank">ImSwitch API docs</a></strong>:
+            <strong><a href="//{{$hostname}}:8001/docs" target="_blank">
+              ImSwitch HTTP API docs
+              {{- /* make template ignore the line break */ -}}
+            </a></strong>:
             Swagger docs for ImSwitch's HTTP API (also useful for testing API endpoints)
           </li>
           <li>
@@ -228,19 +238,32 @@
             Provides SSH access to this machine at <code>{{$hostname}}:22</code>
           </li>
           <li>
-            <strong>Service proxy</strong>:
-            A reverse-proxy to make browser applications and HTTP network APIs uniformly available
-            at different paths at <code>{{$hostname}}</code> on port 80
-          </li>
-          <li>
-            <strong>Forklift</strong>:
-            A software deployment and configuration management system for more robust software
-            updates even with extensive user customizations
+            <strong>Ingress proxy</strong>:
+            A Caddy reverse-proxy to make browser applications and HTTP network APIs uniformly
+            available at different paths at <code>{{$hostname}}</code> on port 80
           </li>
           <li>
             <strong><a href="/" target="_blank">Device portal</a></strong>:
             A landing page as a portal to the browser applications, network APIs, and system
             infrastructure on this machine (this is what you're seeing right now)
+          </li>
+        </ul>
+
+        <p>App management:</p>
+        <ul>
+          <li>
+            <strong>Forklift</strong>:
+            A software deployment, customization, and configuration management system for more
+            robust software updates even with extensive user customizations
+          </li>
+          <li>
+            <strong>Docker Compose</strong>:
+            A configuration system for deploying apps consisting of containerized programs
+          </li>
+          <li>
+            <strong>Docker</strong>:
+            A software packaging, distribution, and runtime system for deploying containerized
+            programs
           </li>
         </ul>
       </div>
