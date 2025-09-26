@@ -13,6 +13,6 @@ deployment:
     file-exports:
       - description: dive binary
         source-type: oci-image
-        url: cgr.dev/chainguard/crane:v0.13.1
+        url: ghcr.io/wagoodman/dive:v0.13.1
         source: usr/bin/dive
         target: overlays/usr/bin/dive
