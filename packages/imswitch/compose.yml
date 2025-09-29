@@ -1,6 +1,6 @@
 services:
   imswitch-noqt:
-    image: ghcr.io/openuc2/imswitch-noqt:sha-abb1df6
+    image: ghcr.io/openuc2/imswitch-noqt:sha-2b18a99
     privileged: true
     ports:
       - "3000:3000"
