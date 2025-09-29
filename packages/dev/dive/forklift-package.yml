@@ -14,5 +14,5 @@ deployment:
       - description: dive binary
         source-type: oci-image
         url: ghcr.io/wagoodman/dive:v0.13.1
-        source: usr/bin/dive
+        source: usr/local/bin/dive
         target: overlays/usr/bin/dive
