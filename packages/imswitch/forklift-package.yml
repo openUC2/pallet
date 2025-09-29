@@ -45,3 +45,10 @@ features:
           target: overlays/etc/firewalld/services/imswitch.xml
         - description: Drop-in XML fragment for firewalld's imswitch service
           target: overlays/etc/firewalld/zones.d/public/70-service-imswitch.xml
+
+  dev-edge:
+    description: >-
+      Uses the `edge` tag for the ImSwitch docker container image, for faster development
+      iteration but no build reproducibility
+    compose-files:
+      - dev-edge.yml
