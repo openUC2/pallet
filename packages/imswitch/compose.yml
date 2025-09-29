@@ -1,6 +1,6 @@
 services:
   imswitch-noqt:
-    image: ghcr.io/openuc2/imswitch-noqt:sha-97934cf
+    image: ghcr.io/openuc2/imswitch-noqt:sha-9794c5b
     privileged: true
     ports:
       - "3000:3000"
@@ -26,8 +26,4 @@ services:
       - SSL=0
       - scan-ext-drive-mount=false
       - WIFI_MODE=host
-
     restart: always
-
-
-
