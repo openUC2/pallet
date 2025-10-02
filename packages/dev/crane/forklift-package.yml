@@ -1,0 +1,22 @@
+package:
+  description: A /usr overlay providing crane, a tool for interacting with OCI container images and registries
+  # Note: maintainers describes the maintainer(s) of the Forklift package, not the upstream software
+  maintainers:
+    - name: Ethan Li
+      email: lietk12@gmail.com
+  license: Apache-2.0
+  sources:
+    - https://github.com/google/go-containerregistry
+
+deployment:
+  provides:
+    file-exports:
+      - description: crane binary
+        source-type: oci-image
+        # Warning: we use the latest label only because docker.io/chainguard/crane doesn't provide
+        # any other labels; in real-world use, you should provide a label which doesn't change, for
+        # reproducibility (and also because Forklift's download cache never updates downloads of
+        # images for any given label)
+        url: cgr.dev/chainguard/crane:latest
+        source: usr/bin/crane
+        target: overlays/usr/bin/crane

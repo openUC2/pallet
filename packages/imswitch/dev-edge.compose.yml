@@ -1,0 +1,3 @@
+services:
+  imswitch-noqt:
+    image: ghcr.io/openuc2/imswitch-noqt:latest

@@ -1,0 +1,104 @@
+name: Auto-update container images in all Compose files to new patch versions
+
+scms:
+  pallet:
+    kind: github
+    spec:
+      owner: '{{ requiredEnv "REPO_OWNER" }}'
+      repository: '{{ requiredEnv "REPO_NAME" }}'
+      branch: edge
+      username: '{{ requiredEnv "GITHUB_ACTOR" }}'
+      token: '{{ requiredEnv "GITHUB_TOKEN" }}'
+      user: '{{ requiredEnv "COMMITTER_USERNAME" }}'
+      email: '{{ requiredEnv "COMMITTER_EMAIL" }}'
+      commitusingapi: true # this allows commits to be signed
+
+actions:
+  pull-request:
+    scmid: pallet
+    kind: github/pullrequest
+    spec:
+      title: "build(compose): bump Compose container images (patch)"
+      labels:
+        - dependencies
+      mergemethod: squash
+      # -patch:
+      automerge: true
+      usetitleforautomerge: true
+
+autodiscovery:
+  scmid: pallet
+  actionid: pull-request
+  groupby: all
+  crawlers:
+    dockercompose:
+      filematch:
+        - "docker-compose.yml"
+        - "docker-compose.*.yml"
+        - "docker-compose-*.yml"
+        - "*.docker-compose.yml"
+        - "docker-compose.yaml"
+        - "docker-compose.*.yaml"
+        - "docker-compose-*.yaml"
+        - "*.docker-compose.yaml"
+        - "compose.yml"
+        - "compose.*.yml"
+        - "compose-*.yml"
+        - "*.compose.yml"
+        - "compose.yaml"
+        - "compose.*.yaml"
+        - "compose-*.yaml"
+        - "*.compose.yaml"
+      ignore:
+        - images:
+          - ghcr.io/sargassum-world/pslocal # temporarily unmaintained; only used in a test package
+      # -patch:
+      versionfilter:
+        kind: semver
+        pattern: patch
+
+    # updatecli provides no easy way to only enable specified crawlers, so instead we have to
+    # disable all other crawlers. Refer to the "enumerating badness" section of
+    # https://www.ranum.com/security/computer_security/editorials/dumb/ for why this is annoying.
+    argocd:
+      ignore:
+        - path: "*"
+    cargo:
+      ignore:
+        - path: "*"
+    flux:
+      ignore:
+        - path: "*"
+    golang/gomod:
+      ignore:
+        - path: "*"
+    helm:
+      ignore:
+        - path: "*"
+    helmfile:
+      ignore:
+        - path: "*"
+    ko:
+      ignore:
+        - path: "*"
+    kubernetes:
+      ignore:
+        - path: "*"
+    maven:
+      ignore:
+        - path: "*"
+    npm:
+      ignore:
+        - path: "*"
+    prow:
+      ignore:
+        - path: "*"
+    rancher/fleet:
+      ignore:
+        - path: "*"
+    terraform:
+      ignore:
+        - path: "*"
+    terragrunt:
+      ignore:
+        - path: "*"
