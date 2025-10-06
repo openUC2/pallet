@@ -32,5 +32,5 @@ features:
           port: 80
           protocol: http
           paths:
-            - /docs
-            - /docs/*
+            - /openUC2
+            - /openUC2/*
