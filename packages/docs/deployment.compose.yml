@@ -1,6 +1,6 @@
 services:
   server:
-    image: ghcr.io/openuc2/project-docs:sha-512e65b
+    image: ghcr.io/openuc2/project-docs:sha-1ecd65a
     volumes:
       - server-data:/data
       - server-config:/config
