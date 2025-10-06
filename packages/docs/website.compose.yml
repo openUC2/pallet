@@ -7,8 +7,6 @@ services:
       caddy.redir: /docs /docs/
       caddy.handle: /docs/*
       caddy.handle.reverse_proxy: "{{upstreams 80}}"
-    environment:
-      - BASE_URL=/docs/
 
 networks:
   caddy-ingress:
