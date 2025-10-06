@@ -5,8 +5,8 @@ services:
     labels:
       caddy: :80
       caddy.redir: /openUC2 /openUC2/
-      caddy.handle: /openUC2/*
-      caddy.handle.reverse_proxy: "{{upstreams 80}}"
+      caddy.handle_path: /openUC2/*
+      caddy.handle_path.reverse_proxy: "{{upstreams 80}}"
 
 networks:
   caddy-ingress:
