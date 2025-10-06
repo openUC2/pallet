@@ -1,5 +1,5 @@
 package: /packages/device-portal
 features:
-- frontend
-- deploy-rpi
+  - frontend
+  - deploy-rpi
 disabled: false
