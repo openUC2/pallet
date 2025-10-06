@@ -1,6 +1,6 @@
 services:
-  imswitch-docker-arm64-noqt:
-    image: ghcr.io/openuc2/imswitch-noqt-arm64:latest
+  imswitch-noqt:
+    image: ghcr.io/openuc2/imswitch-noqt:sha-39d3043
     privileged: true
     ports:
       - "3000:3000"
@@ -26,8 +26,4 @@ services:
       - SSL=0
       - scan-ext-drive-mount=false
       - WIFI_MODE=host
-
     restart: always
-
-
-

@@ -1,0 +1,18 @@
+package:
+  description: A /usr overlay providing dive, a tool for inspecting OCI container images
+  # Note: maintainers describes the maintainer(s) of the Forklift package, not the upstream software
+  maintainers:
+    - name: Ethan Li
+      email: lietk12@gmail.com
+  license: MIT
+  sources:
+    - https://github.com/wagoodman/dive
+
+deployment:
+  provides:
+    file-exports:
+      - description: dive binary
+        source-type: oci-image
+        url: ghcr.io/wagoodman/dive:v0.13.1
+        source: usr/local/bin/dive
+        target: overlays/usr/bin/dive
