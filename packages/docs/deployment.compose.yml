@@ -1,0 +1,13 @@
+services:
+  server:
+    image: ghcr.io/openuc2/project-docs:sha-f7c964b
+    volumes:
+      - server-data:/data
+      - server-config:/config
+networks:
+  default:
+    name: none
+    external: true
+volumes:
+  server-data: null
+  server-config: null
