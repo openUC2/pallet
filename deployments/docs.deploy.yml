@@ -1,0 +1,4 @@
+package: /packages/docs
+features:
+  - website
+disabled: false
