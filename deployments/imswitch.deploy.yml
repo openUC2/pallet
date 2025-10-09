@@ -1,2 +1,5 @@
 package: /packages/imswitch
+features:
+  - firewall-allow-direct
+  - firewall-allow-public
 disabled: false
