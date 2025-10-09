@@ -1,6 +1,6 @@
 services:
   lepmonos:
-    image: ghcr.io/desboe/lepmonos:arm64-latest 
+    image: ghcr.io/desboe/lepmonos:arm64-latest@sha256:7636528ccc12b09613c2c4e96072e8f915ff12d561a32bebc83b033ce1c023f4
     privileged: true
     ports:
       - "3000:3000"
