@@ -1,0 +1,13 @@
+services:
+  server:
+    networks:
+      - caddy-ingress
+    labels:
+      caddy: :80
+      caddy.redir: /admin/panel /admin/panel/
+      caddy.handle: /admin/panel/*
+      caddy.handle.reverse_proxy: "{{upstreams 3001}}"
+
+networks:
+  caddy-ingress:
+    external: true

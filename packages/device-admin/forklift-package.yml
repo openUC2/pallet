@@ -1,0 +1,35 @@
+package:
+  description: Machine administration panel
+  maintainers:
+    - name: Ethan Li
+      email: lietk12@gmail.com
+  license: Apache-2.0
+  sources:
+    # Forklift-deployed software (MIT):
+    - https://github.com/openUC2/device-admin
+
+deployment:
+  compose-files:
+    - deployment.compose.yml
+
+features:
+  frontend:
+    description: Provides access to a machine administration panel
+    compose-files:
+      - frontend.compose.yml
+    requires:
+      networks:
+        - description: Overlay network for Caddy to connect to upstream services
+          name: caddy-ingress
+      services:
+        - tags: [caddy-docker-proxy]
+          port: 80
+          protocol: http
+    provides:
+      services:
+        - description: Administration panel for the machine's operating system
+          port: 80
+          protocol: http
+          paths:
+            - /admin/panel
+            - /admin/panel/*

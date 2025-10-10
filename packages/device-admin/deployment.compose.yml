@@ -1,6 +1,6 @@
 services:
   server:
-    image: ghcr.io/openuc2/device-portal:0.1.1@sha256:5b181d3ca8bba9b2b859318ebf72e24a99d1a197b44ea2d98633139e16fca040
+    image: ghcr.io/openuc2/device-admin:0.1.1-alpha.0@sha256:7ed5deac4fb4846b2ac9f4ee2c3c7d3bbb767812b754215f10bcbcc82e9b7817
     environment:
       - TEMPLATES_PATH=/web/templates
     volumes:
