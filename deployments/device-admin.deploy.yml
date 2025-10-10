@@ -1,0 +1,4 @@
+package: /packages/device-portal
+features:
+  - frontend
+disabled: false
