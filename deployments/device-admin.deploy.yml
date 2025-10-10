@@ -1,4 +1,4 @@
-package: /packages/device-portal
+package: /packages/device-admin
 features:
   - frontend
 disabled: false
