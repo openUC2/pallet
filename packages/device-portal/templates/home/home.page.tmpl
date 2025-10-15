@@ -13,7 +13,7 @@
 
   <main>
     <section class="section content">
-      <div class="container">
+      <div class="container is-max-desktop">
         <h1>Machine {{$machineName}}</h1>
         <p>
           Welcome! This is the home page for your machine with machine name
@@ -37,7 +37,7 @@
               <a href="//openuc2-{{$machineName}}.local">openuc2-{{$machineName}}.local</a>
               to access this machine (though
               <a href="//openuc2.local">openuc2.local</a>
-              should also work if no other machine are connected to the router).
+              should also work if no other machines are connected to the router).
             </div>
           </article>
         {{else if not (hasPrefix "openuc2-" $hostname)}}

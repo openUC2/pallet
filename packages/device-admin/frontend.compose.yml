@@ -5,8 +5,8 @@ services:
     labels:
       caddy: :80
       caddy.redir: /admin/panel /admin/panel/
-      caddy.handle_path: /admin/panel/*
-      caddy.handle_path.reverse_proxy: "{{upstreams 3001}}"
+      caddy.handle: /admin/panel/*
+      caddy.handle.reverse_proxy: "{{upstreams 3001}}"
 
 networks:
   caddy-ingress:
