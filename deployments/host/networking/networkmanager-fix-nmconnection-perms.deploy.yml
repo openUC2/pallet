@@ -1,1 +1,2 @@
 package: /packages/core/host/networking/networkmanager-fix-nmconnection-perms
+disabled: false
