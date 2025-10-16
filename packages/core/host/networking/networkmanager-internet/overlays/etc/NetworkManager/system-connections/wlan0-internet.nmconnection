@@ -1,0 +1,17 @@
+[connection]
+id=wlan0-internet
+type=wifi
+interface-name=wlan0
+
+[wifi]
+# Note: this section must be completed before this connection profile is usable!
+
+[wifi-security]
+# Note: this section must be completed before this connection profile is usable!
+
+[ipv4]
+method=auto
+
+[ipv6]
+addr-gen-mode=default
+method=auto
