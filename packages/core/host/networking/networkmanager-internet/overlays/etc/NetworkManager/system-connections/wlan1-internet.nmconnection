@@ -2,12 +2,15 @@
 id=wlan1-internet
 type=wifi
 interface-name=wlan1
+autoconnect=false
 
 [wifi]
-# Note: this section must be completed before this connection profile is usable!
+mode=infrastructure
+ssid=Please change me!
 
 [wifi-security]
-# Note: this section must be completed before this connection profile is usable!
+key-mgmt=wpa-psk
+psk=Please change me!
 
 [ipv4]
 method=auto
@@ -15,4 +18,3 @@ method=auto
 [ipv6]
 addr-gen-mode=default
 method=auto
-

@@ -2,12 +2,15 @@
 id=wlan0-internet
 type=wifi
 interface-name=wlan0
+autoconnect=false
 
 [wifi]
-# Note: this section must be completed before this connection profile is usable!
+mode=infrastructure
+ssid=Please change me!
 
 [wifi-security]
-# Note: this section must be completed before this connection profile is usable!
+key-mgmt=wpa-psk
+psk=Please change me!
 
 [ipv4]
 method=auto
