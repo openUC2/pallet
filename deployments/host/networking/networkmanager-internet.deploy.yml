@@ -1,0 +1,5 @@
+package: /packages/core/host/networking/networkmanager-internet
+features:
+  - wlan0
+  - wlan1
+disabled: false

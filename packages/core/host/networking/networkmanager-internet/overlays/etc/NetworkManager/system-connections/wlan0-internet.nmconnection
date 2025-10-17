@@ -1,0 +1,20 @@
+[connection]
+id=wlan0-internet
+type=wifi
+interface-name=wlan0
+autoconnect=false
+
+[wifi]
+mode=infrastructure
+ssid=Please change me!
+
+[wifi-security]
+key-mgmt=wpa-psk
+psk=Please change me!
+
+[ipv4]
+method=auto
+
+[ipv6]
+addr-gen-mode=default
+method=auto

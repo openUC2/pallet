@@ -29,7 +29,7 @@ features:
           protocol: http
     provides:
       services:
-        - description: Landing page for the PlanktoScope's network services
+        - description: Landing page for the machine's network services
           port: 80
           protocol: http
           paths:
