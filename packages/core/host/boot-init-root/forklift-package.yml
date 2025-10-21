@@ -10,9 +10,8 @@ package:
 deployment:
   provides:
     file-exports:
-      - description: Shell script to import files from the boot partition's init-root dir into the root FS
-        target: overlays/usr/libexec/boot-init-root
-      - description: systemd service to move the contents of `/boot/firmware/init-root` during boot
+      - description:
+          systemd service to move the contents of `/boot/firmware/init-root` into the root FS during boot
         target: overlays/usr/lib/systemd/system/boot-init-root.service
       - description: systemd service enablement for boot-init-root.service
         target: overlays/etc/systemd/system/multi-user.target.wants/boot-init-root.service
