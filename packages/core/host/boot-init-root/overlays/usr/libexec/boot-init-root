@@ -1,0 +1,18 @@
+#!/bin/bash -eu
+shopt -s nullglob
+
+# Note: the following path only exists in a booted system; in an unbooted SD card, this directory
+# is just the `/init-root` directory of the boot partition:
+init_root=/boot/firmware/init-root
+mkdir -p "$init_root"
+
+# Handle the first (by lexicographical order) init-root archive:
+archives=(/boot/firmware/init-root-*.tar.gz)
+archive="${archives[0]}"
+if [ -f "$archive" ]; then
+  tar -txzf "$archive" -C "$init_root"
+  rm "$archive"
+fi
+
+cp -r "$init_root"/* /
+rm -rf "$init_root"/*

@@ -10,6 +10,9 @@ package:
 deployment:
   provides:
     file-exports:
+      - description:
+          Shell script to import `init-root` and `init-root-*.tar.gz` from the boot partition
+        target: overlays/usr/libexec/boot-init-root
       - description: systemd service to move the contents of `/boot/firmware/init-root` during boot
         target: overlays/usr/lib/systemd/system/boot-init-root.service
       - description: systemd service enablement for boot-init-root.service

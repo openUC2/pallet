@@ -4,8 +4,7 @@ ConditionPathExistsGlob=/boot/firmware/init-root/*
 
 [Service]
 Type=oneshot
-ExecStart=sh -c 'cp -r /boot/firmware/init-root/* /'
-ExecStartPost=sh -c 'rm -rf /boot/firmware/init-root/*'
+ExecStart=bash -c '/usr/libexec/boot-init-root'
 Restart=no
 
 [Install]
