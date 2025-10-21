@@ -8,9 +8,13 @@ init_root=/boot/firmware/init-root
 # Extract all init-root archives in lexicographical order:
 for archive in /boot/firmware/init-root-*.tar.gz; do
   mkdir -p "$init_root"
+  echo "$archive:"
+  tar -tzf "$archive"
+  echo
   tar \
-    -xzvf "$archive" \
+    -xzf "$archive" \
     -C "$init_root" \
     --no-same-owner # because tar will fail if we try to keep the owner
   rm "$archive"
+  echo
 done
