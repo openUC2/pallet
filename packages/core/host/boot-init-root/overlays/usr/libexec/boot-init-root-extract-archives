@@ -8,6 +8,6 @@ init_root=/boot/firmware/init-root
 # Extract all init-root archives in lexicographical order:
 for archive in /boot/firmware/init-root-*.tar.gz; do
   mkdir -p "$init_root"
-  tar -txzf "$archive" -C "$init_root"
+  tar -xzvf "$archive" -C "$init_root"
   rm "$archive"
 done
