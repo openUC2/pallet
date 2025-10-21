@@ -10,7 +10,20 @@ package:
 deployment:
   provides:
     file-exports:
-      - description: systemd service to move the contents of `/boot/firmware/init-root` during boot
+      - description:
+          systemd service to move the contents of `/boot/firmware/init-root` into the root FS during boot
         target: overlays/usr/lib/systemd/system/boot-init-root.service
       - description: systemd service enablement for boot-init-root.service
         target: overlays/etc/systemd/system/multi-user.target.wants/boot-init-root.service
+
+features:
+  extract-archives:
+    description: Handling of `init-root-*.tar.gz` archives in the boot partition
+    provides:
+      file-exports:
+        - description: Shell script to extract init-root archives in the boot partition
+          target: overlays/usr/libexec/boot-init-root-extract-archives
+        - description: systemd service to extract init-root archives in the boot partition during boot
+          target: overlays/usr/lib/systemd/system/boot-init-root-extract-archives.service
+        - description: systemd service enablement for boot-init-root-extract-archives.service
+          target: overlays/etc/systemd/system/multi-user.target.wants/boot-init-root-extract-archives.service
