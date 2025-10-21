@@ -1,0 +1,13 @@
+#!/bin/bash -eu
+shopt -s nullglob
+
+# Note: `/boot/firmware` in the root partition only exists in a booted system; in an unbooted SD
+# card, that directory is just the root directory of the boot partition.
+init_root=/boot/firmware/init-root
+
+# Extract all init-root archives in lexicographical order:
+for archive in /boot/firmware/init-root-*.tar.gz; do
+  mkdir -p "$init_root"
+  tar -txzf "$archive" -C "$init_root"
+  rm "$archive"
+done
