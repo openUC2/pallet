@@ -1,0 +1,25 @@
+services:
+  server:
+    image: docker.io/filebrowser/filebrowser:v2.41.0@sha256:b7e05896700acf278bc4ee90cac1e13f17d7a983dfbe5744ee3690ee11dce766
+    volumes:
+      - type: bind
+        source: /
+        target: /root
+        bind:
+          create_host_path: false
+      - type: bind
+        source: /
+        target: /srv # this prevents filebrowser from making an unnamed volume
+        bind:
+          create_host_path: false
+      - server-data:/database
+    environment:
+      - FB_DATABASE=/database/filebrowser.db
+      - FB_ROOT=/root
+    user: root
+networks:
+  default:
+    name: none
+    external: true
+volumes:
+  server-data: {}

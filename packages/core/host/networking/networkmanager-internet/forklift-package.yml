@@ -1,0 +1,25 @@
+package:
+  description:
+    Base templates of NetworkManager connection profiles for connecting to the internet via Wi-Fi
+  maintainers:
+    - name: Ethan Li
+      email: lietk12@gmail.com
+  license: Apache-2.0
+  sources:
+    - https://github.com/openUC2/pallet
+
+features:
+  wlan0:
+    description: Provide base template for internet connection on the internal Wi-Fi module (wlan0)
+    provides:
+      file-exports:
+        - description: NetworkManager connection profile for connecting to the internet on wlan0
+          target: overlays/etc/NetworkManager/system-connections/wlan0-internet.nmconnection
+          permissions: 0600
+  wlan1:
+    description: Provide base template for internet connection on an external Wi-Fi module (wlan1)
+    provides:
+      file-exports:
+        - description: NetworkManager connection profile for connecting to the internet on wlan1
+          target: overlays/etc/NetworkManager/system-connections/wlan1-internet.nmconnection
+          permissions: 0600

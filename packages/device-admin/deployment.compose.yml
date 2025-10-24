@@ -1,0 +1,18 @@
+services:
+  server:
+    image: ghcr.io/openuc2/device-admin:0.1.1-alpha.7@sha256:ba7c59eb220f298dafe1829e4bb990063a1cda1bbfaf1b6926603a31ebd15952
+    environment:
+      - HTTP_BASEPATH=/admin/panel/
+      - TEMPLATES_PATH=/web/templates
+    volumes:
+      - type: bind
+        source: ./templates
+        target: /web/templates
+        read_only: true
+      - type: bind
+        source: /run/dbus/system_bus_socket
+        target: /var/run/dbus/system_bus_socket
+networks:
+  default:
+    name: none
+    external: true
