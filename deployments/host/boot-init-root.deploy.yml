@@ -1,4 +1,0 @@
-package: /packages/core/host/boot-init-root
-features:
-  - extract-archives
-disabled: false

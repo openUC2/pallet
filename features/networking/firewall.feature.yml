@@ -1,0 +1,4 @@
+description: Firewall configurations to allow access
+modifiers:
+  - target: /packages/core/host/networking/firewalld
+  - target: /deployments/host/networking/firewalld.deploy.yml

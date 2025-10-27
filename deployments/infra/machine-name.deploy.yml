@@ -1,0 +1,5 @@
+package: /deployments/infra/machine-name.pkg
+features:
+  - generate-hostname-templated
+  - hostname-template-branded
+disabled: false

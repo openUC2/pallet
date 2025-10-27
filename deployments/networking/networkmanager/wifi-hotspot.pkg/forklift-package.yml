@@ -1,0 +1,188 @@
+package:
+  description:
+    Default NetworkManager connection profiles for Wi-Fi hotspots, and auto-generation of those
+    connection profiles
+  maintainers:
+    - name: Ethan Li
+      email: lietk12@gmail.com
+  license: Apache-2.0
+  sources:
+    - https://github.com/openUC2/pallet
+
+deployment:
+  provides:
+    file-exports:
+      - description: Disables DHCP advertisement as default route to internet on the wlan0 & wlan1 interfaces
+        target: overlays/etc/NetworkManager/dnsmasq-shared.d/30-dhcp-no-default-route-wlan.conf
+
+features:
+  dhcp-default-route:
+    description:
+      Configure dnsmasq's DHCP server to advertise itself as a default route to the internet for
+      wlan0 & wlan1
+    provides:
+      file-exports:
+        - description: Sets DHCP settings on the eth0 & eth1 interfaces
+          target: overlays/etc/NetworkManager/dnsmasq-shared.d/35-dhcp-default-route-wlan.conf
+  wlan0:
+    description: Provide a Wi-Fi hotspot on the internal Wi-Fi module (wlan0)
+    requires:
+      filesets:
+        - description: systemd service to assemble a NetworkManager connection file during boot
+          paths:
+            - /usr/lib/systemd/system/assemble-networkmanager-connection@.service
+        - description: systemd service to assemble a templated NetworkManager connection drop-in file during boot
+          paths:
+            - /usr/lib/systemd/system/assemble-networkmanager-connection-templated@.service
+    provides:
+      file-exports:
+        - description: systemd service enablement for assemble-networkmanager-connection@wlan0-hotspot.service
+          target: overlays/etc/systemd/system/NetworkManager.service.wants/assemble-networkmanager-connection@wlan0-hotspot.service
+        - description: Symlink redirecting /etc/NetworkManager/system-connections/wlan0-hotspot.nmconnection to an auto-generated file
+          target: overlays/etc/NetworkManager/system-connections/wlan0-hotspot.nmconnection
+        - description: Drop-in NetworkManager connection fragment with comment describing NetworkManager connection fragments drop-in directory
+          target: overlays/etc/NetworkManager/system-connections.d/wlan0-hotspot/10-README.nmconnection
+        - description: Drop-in NetworkManager connection fragment with basic connection settings
+          target: overlays/etc/NetworkManager/system-connections.d/wlan0-hotspot/20-connection.nmconnection
+        - description: Drop-in NetworkManager connection fragment with basic Wi-Fi settings
+          target: overlays/etc/NetworkManager/system-connections.d/wlan0-hotspot/30-wifi.nmconnection
+        # templated:
+        - description:
+            Symlink redirecting /etc/NetworkManager/system-connections.d/wlan0-hotspot/40-generated-templated.nmconnection to an auto-generated file
+          target: overlays/etc/NetworkManager/system-connections.d/wlan0-hotspot/40-generated-templated.nmconnection
+        - description:
+            Drop-in NetworkManager connection fragment template with comment describing
+            NetworkManager connection fragment template drop-in directory
+          target: overlays/etc/NetworkManager/system-connections-templates.d/wlan0-hotspot/10-README.nmconnection
+        - description: Drop-in NetworkManager connection fragment with basic Wi-Fi security settings
+          target: overlays/etc/NetworkManager/system-connections.d/wlan0-hotspot/50-wifi-security.nmconnection
+        - description: Drop-in NetworkManager connection fragment with basic IPv4 settings
+          target: overlays/etc/NetworkManager/system-connections.d/wlan0-hotspot/60-ipv4.nmconnection
+        - description: Drop-in NetworkManager connection fragment with basic IPv6 settings
+          target: overlays/etc/NetworkManager/system-connections.d/wlan0-hotspot/70-ipv6.nmconnection
+      filesets:
+        - description:
+            Drop-in directory for NetworkManager connection fragment files to generate the wlan0
+            hotspot connection
+          tags:
+            - drop-in-assembly
+          paths:
+            - /etc/NetworkManager/system-connections.d/wlan0-hotspot
+        - description: Auto-generated NetworkManager connection file
+          paths:
+            - /run/overlays/generated/etc/NetworkManager/system-connections/wlan0-hotspot.nmconnection
+        - description:
+            Drop-in directory for NetworkManager connection fragment template files to generate a
+            wlan0 hotspot connection fragment file
+          tags:
+            - drop-in-assembly
+          paths:
+            - /etc/NetworkManager/system-connections-templates.d/wlan0-hotspot
+        - description: Auto-generated NetworkManager connection fragment file
+          paths:
+            - /run/overlays/generated/etc/NetworkManager/system-connections.d/wlan0-hotspot/40-generated-templated.nmconnection
+  wlan0-localization:
+    description: Set Wi-Fi localization settings for maximum international compatibility
+    provides:
+      file-exports:
+        - description: Drop-in NetworkManager connection fragment with Wi-Fi localization-dependent settings
+          target: overlays/etc/NetworkManager/system-connections.d/wlan0-hotspot/31-wifi-regional.nmconnection
+  wlan0-ssid:
+    description: Set Wi-Fi SSID based on hostname
+    provides:
+      file-exports:
+        - description: Drop-in NetworkManager connection fragment template with Wi-Fi SSID
+          target: overlays/etc/NetworkManager/system-connections-templates.d/wlan0-hotspot/20-ssid.nmconnection
+  wlan0-branded-password:
+    description: Set the Wi-Fi password to a branded default
+    provides:
+      file-exports:
+        - description: Drop-in NetworkManager connection fragment with a cleartext Wi-Fi password
+          target: overlays/etc/NetworkManager/system-connections.d/wlan0-hotspot/51-wifi-security-password.nmconnection
+  wlan0-direct-ip-address:
+    description: Set the IPv4 address to the default for direct connections on wlan0
+    provides:
+      file-exports:
+        - description: Drop-in NetworkManager connection fragment with an IPv4 subnet for connected devices
+          target: overlays/etc/NetworkManager/system-connections.d/wlan0-hotspot/61-ipv4-address.nmconnection
+  wlan1:
+    description: Provide a Wi-Fi hotspot on an external Wi-Fi module (wlan1)
+    requires:
+      filesets:
+        - description: systemd service to assemble a NetworkManager connection file during boot
+          paths:
+            - /usr/lib/systemd/system/assemble-networkmanager-connection@.service
+        - description: systemd service to assemble a templated NetworkManager connection drop-in file during boot
+          paths:
+            - /usr/lib/systemd/system/assemble-networkmanager-connection-templated@.service
+    provides:
+      file-exports:
+        - description: systemd service enablement for assemble-networkmanager-connection@wlan1-hotspot.service
+          target: overlays/etc/systemd/system/NetworkManager.service.wants/assemble-networkmanager-connection@wlan1-hotspot.service
+        - description: Symlink redirecting /etc/NetworkManager/system-connections/wlan1-hotspot.nmconnection to an auto-generated file
+          target: overlays/etc/NetworkManager/system-connections/wlan1-hotspot.nmconnection
+        - description: Drop-in NetworkManager connection fragment with comment describing NetworkManager connection fragments drop-in directory
+          target: overlays/etc/NetworkManager/system-connections.d/wlan1-hotspot/10-README.nmconnection
+        - description: Drop-in NetworkManager connection fragment with basic connection settings
+          target: overlays/etc/NetworkManager/system-connections.d/wlan1-hotspot/20-connection.nmconnection
+        - description: Drop-in NetworkManager connection fragment with basic Wi-Fi settings
+          target: overlays/etc/NetworkManager/system-connections.d/wlan1-hotspot/30-wifi.nmconnection
+        # templated:
+        - description:
+            Symlink redirecting /etc/NetworkManager/system-connections.d/wlan1-hotspot/40-generated-templated.nmconnection to an auto-generated file
+          target: overlays/etc/NetworkManager/system-connections.d/wlan1-hotspot/40-generated-templated.nmconnection
+        - description:
+            Drop-in NetworkManager connection fragment template with comment describing
+            NetworkManager connection fragment template drop-in directory
+          target: overlays/etc/NetworkManager/system-connections-templates.d/wlan1-hotspot/10-README.nmconnection
+        - description: Drop-in NetworkManager connection fragment with basic Wi-Fi security settings
+          target: overlays/etc/NetworkManager/system-connections.d/wlan1-hotspot/50-wifi-security.nmconnection
+        - description: Drop-in NetworkManager connection fragment with basic IPv4 settings
+          target: overlays/etc/NetworkManager/system-connections.d/wlan1-hotspot/60-ipv4.nmconnection
+        - description: Drop-in NetworkManager connection fragment with basic IPv6 settings
+          target: overlays/etc/NetworkManager/system-connections.d/wlan1-hotspot/70-ipv6.nmconnection
+      filesets:
+        - description:
+            Drop-in directory for NetworkManager connection fragment files to generate the wlan1
+            hotspot connection
+          tags:
+            - drop-in-assembly
+          paths:
+            - /etc/NetworkManager/system-connections.d/wlan1-hotspot
+        - description: Auto-generated NetworkManager connection file
+          paths:
+            - /run/overlays/generated/etc/NetworkManager/system-connections/wlan1-hotspot.nmconnection
+        - description:
+            Drop-in directory for NetworkManager connection fragment template files to generate a
+            wlan1 hotspot connection fragment file
+          tags:
+            - drop-in-assembly
+          paths:
+            - /etc/NetworkManager/system-connections-templates.d/wlan1-hotspot
+        - description: Auto-generated NetworkManager connection fragment file
+          paths:
+            - /run/overlays/generated/etc/NetworkManager/system-connections.d/wlan1-hotspot/40-generated-templated.nmconnection
+  wlan1-localization:
+    description: Set Wi-Fi localization settings for maximum international compatibility
+    provides:
+      file-exports:
+        - description: Drop-in NetworkManager connection fragment with Wi-Fi localization-dependent settings
+          target: overlays/etc/NetworkManager/system-connections.d/wlan1-hotspot/31-wifi-regional.nmconnection
+  wlan1-ssid:
+    description: Set Wi-Fi SSID based on hostname
+    provides:
+      file-exports:
+        - description: Drop-in NetworkManager connection fragment template with Wi-Fi SSID
+          target: overlays/etc/NetworkManager/system-connections-templates.d/wlan1-hotspot/20-ssid.nmconnection
+  wlan1-branded-password:
+    description: Set the Wi-Fi password to a branded default
+    provides:
+      file-exports:
+        - description: Drop-in NetworkManager connection fragment with a cleartext Wi-Fi password
+          target: overlays/etc/NetworkManager/system-connections.d/wlan1-hotspot/51-wifi-security-password.nmconnection
+  wlan1-direct-ip-address:
+    description: Set the IPv4 address to the default for direct connections on wlan1
+    provides:
+      file-exports:
+        - description: Drop-in NetworkManager connection fragment with an IPv4 subnet for connected devices
+          target: overlays/etc/NetworkManager/system-connections.d/wlan1-hotspot/61-ipv4-address.nmconnection

@@ -1,0 +1,23 @@
+[Unit]
+Description=Assemble and process (with string interpolation) drop-in dnsmasq config template files into a drop-in dnsmasq config file
+ConditionFileIsExecutable=/usr/libexec/render-templated-config
+ConditionPathIsDirectory=/etc/NetworkManager/dnsmasq-shared-templates.d
+# If there are services to generate a machine name and hostname (which can optionally be used in
+# templates), run those services first:
+Wants=generate-machine-name.service
+After=generate-machine-name.service
+Wants=generate-hostname-templated.service
+After=generate-hostname-templated.service
+Before=NetworkManager.service
+
+[Service]
+Type=oneshot
+ExecStartPre=mkdir -p /run/overlays/generated/etc/NetworkManager/dnsmasq-shared.d
+ExecStart=sh -c "\
+  cat /etc/NetworkManager/dnsmasq-shared-templates.d/* | \
+    /usr/libexec/render-templated-config \
+      >/run/overlays/generated/etc/NetworkManager/dnsmasq-shared.d/40-generated-templated-config.conf \
+"
+
+[Install]
+WantedBy=NetworkManager.service

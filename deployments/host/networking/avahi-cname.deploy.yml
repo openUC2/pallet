@@ -1,5 +1,0 @@
-package: /packages/core/host/networking/avahi-cname
-features:
-  - register-openuc2-local
-  - register-uc2-local
-disabled: false

@@ -1,0 +1,12 @@
+description: PlanktoScope dashboard apps
+modifiers:
+  - type: add-feature
+    source: base/http
+  - type: add-feature
+    source: base/mqtt
+  - target: /packages/core/apps/planktoscope/device-portal
+  - target: /deployments/apps/ps/device-portal.deploy.yml
+  - target: /packages/core/host/planktoscope/node-red-dashboard
+  - target: /deployments/host/planktoscope/node-red-dashboard.deploy.yml
+  - target: /packages/core/apps/planktoscope/node-red-dashboard
+  - target: /deployments/apps/ps/node-red-dashboard.deploy.yml

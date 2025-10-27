@@ -1,0 +1,222 @@
+package:
+  description:
+    System administration browser dashboard ambiently provided by the OS, and auto-generated
+    configurations for it
+  maintainers:
+    - name: Ethan Li
+      email: lietk12@gmail.com
+  license: LGPL-2.1
+  sources:
+    # Ambiently-provided software (LGPL-2.1):
+    - https://github.com/cockpit-project/cockpit
+    # Auto-generation scripts (Apache-2.0):
+    - https://github.com/openUC2/pallet
+
+host:
+  provides:
+    listeners:
+      - description: Web server for the Cockpit dashboard
+        port: 9090
+        protocol: tcp
+    services:
+      - description: The Cockpit system administration dashboard
+        port: 9090
+        protocol: http
+        paths:
+          - /admin/cockpit/*
+
+deployment:
+  compose-files:
+    - deployment.compose.yml
+  provides:
+    file-exports:
+      # Config file assembly:
+      - description:
+          Shell script to generate a Cockpit config file from drop-in config fragment files
+        target: overlays/usr/libexec/assemble-cockpit-config
+      - description: systemd service to run the assemble-cockpit-config script during boot
+        target: overlays/usr/lib/systemd/system/assemble-cockpit-config.service
+      - description: systemd service enablement for assemble-cockpit-config.service
+        target: overlays/etc/systemd/system/multi-user.target.wants/assemble-cockpit-config.service
+      - description: Symlink redirecting /etc/cockpit/cockpit.conf to an auto-generated file
+        target: overlays/etc/cockpit/cockpit.conf
+      # Drop-in config fragments to assemble by default:
+      - description:
+          Drop-in Cockpit config fragment with comment describing Cockpit config drop-in directory
+        target: overlays/etc/cockpit/cockpit.conf.d/10-header.conf
+      - description:
+          Drop-in Cockpit config fragment for the WebService section of the Cockpit config
+        target: overlays/etc/cockpit/cockpit.conf.d/20-webservice-0-start.conf
+      # Origins config assembly:
+      - description:
+          Shell script to generate a drop-in Cockpit config file fragment from drop-in Cockpit
+          origins list files
+        target: overlays/usr/libexec/assemble-cockpit-origins
+      - description: systemd service to run the assemble-cockpit-origins script during boot
+        target: overlays/usr/lib/systemd/system/assemble-cockpit-origins.service
+        # Note: we don't need to enable assemble-cockpit-origins.service because
+        # assemble-cockpit-config.service depends on it, and assemble-cockpit-origins.service is
+        # useless without assemble-cockpit-config.service.
+      - description:
+          Symlink redirecting /etc/cockpit/origins.d/20-webservice-50-origins.conf to an
+          auto-generated file
+        target: overlays/etc/cockpit/cockpit.conf.d/20-webservice-50-origins.conf
+      # Drop-in origins lists to assemble by default:
+      - description:
+          Drop-in Cockpit origins list with comment describing Cockpit origins drop-in directory
+        target: overlays/etc/cockpit/origins.d/10-README
+      - description: Drop-in Cockpit origins list for access from localhost
+        target: overlays/etc/cockpit/origins.d/20-localhost
+      # Templated origins list assembly:
+      - description:
+          systemd service to generate a drop-in Cockpit origins list from drop-in Cockpit origins
+          list templates during boot
+        target: overlays/usr/lib/systemd/system/assemble-cockpit-origins-templated.service
+        # Note: we don't need to enable assemble-cockpit-origins-templated.service because
+        # assemble-cockpit-origins.service depends on it, and assemble-cockpit-origins-templated.service is
+        # useless without assemble-cockpit-origins.service.
+      - description:
+          Symlink redirecting /etc/cockpit/origins.d/60-generated-templated-names to an
+          auto-generated file
+        target: overlays/etc/cockpit/origins.d/60-generated-templated-names
+      # Drop-in origins templates lists to assemble by default:
+      - description:
+          Drop-in Cockpit origins template list with comment describing Cockpit origins template
+          drop-in directory
+        target: overlays/etc/cockpit/origins-templates.d/10-README
+      - description:
+          "Drop-in Cockpit origins template list for access via the machine name with a custom
+          domain, e.g. 'metal-slope-23501.uc2'"
+        target: overlays/etc/cockpit/origins-templates.d/20-custom-domain-machine-name
+    filesets:
+      - description: Drop-in directory for config file fragments to generate the Cockpit config file
+        tags:
+          - drop-in-assembly
+        paths:
+          - /etc/cockpit/cockpit.conf.d
+      - description: Drop-in directory to specify origins for Cockpit to allow
+        tags:
+          - drop-in-assembly
+        paths:
+          - /etc/cockpit/origins.d
+      - description: Drop-in directory to specify templates of origins for Cockpit to allow
+        tags:
+          - drop-in-assembly
+          - templating-machine-name
+          - templating-hostname
+          - templating-custom-domain
+        paths:
+          - /etc/cockpit/origins-templates.d
+      - description: Auto-generated Cockpit config file
+        paths:
+          - /run/overlays/generated/etc/cockpit/cockpit.conf
+      - description: Auto-generated Cockpit drop-in config fragment file specifying allowed origins
+        paths:
+          - /run/overlays/generated/etc/cockpit/cockpit.conf.d/20-webservice-50-origins.conf
+      - description:
+          Auto-generated Cockpit drop-in origins list file specifying some allowed origins based on
+          machine name, hostname, and/or custom domain.
+        paths:
+          - /run/overlays/generated/etc/cockpit/origins.d/60-generated-templated-names
+
+features:
+  allow-unencrypted:
+    description: Allow accessing Cockpit over HTTP rather than HTTPS
+    provides:
+      file-exports:
+        - description: Drop-in Cockpit config fragment
+          target: overlays/etc/cockpit/cockpit.conf.d/20-webservice-10-allow-unencrypted.conf
+  allow-origins-direct-static-ips:
+    description:
+      Allow accessing Cockpit via some static IP addresses for direct connections
+    provides:
+      file-exports:
+        - description: Drop-in Cockpit origins list
+          target: overlays/etc/cockpit/origins.d/30-direct-static-ips
+  allow-origins-simplified-branded-mdns-names:
+    description: "Allow accessing Cockpit via a machine-independent branded name like 'openuc2.local'"
+    provides:
+      file-exports:
+        - description: Drop-in Cockpit origins list
+          target: overlays/etc/cockpit/origins.d/40-simplified-branded-mdns-names
+  allow-origins-templated-custom-domain-home:
+    description: "Allow accessing Cockpit via 'home' with a custom domain, e.g. home.uc2"
+    provides:
+      file-exports:
+        - description: Drop-in Cockpit origins list
+          target: overlays/etc/cockpit/origins-templates.d/30-custom-domain-home
+  allow-origins-templated-mdns-hostname:
+    provides:
+      description:
+        "Allow accessing Cockpit via the hostname with mDNS, e.g. 'openuc2-metal-slope-23501.local'"
+      file-exports:
+        - description: Drop-in Cockpit origins list
+          target: overlays/etc/cockpit/origins-templates.d/40-mdns-hostname
+  allow-origins-templated-hostname:
+    provides:
+      description:
+        "Allow accessing Cockpit via the bare hostname, e.g. 'openuc2-metal-slope-23501'"
+      file-exports:
+        - description: Drop-in Cockpit origins list
+          target: overlays/etc/cockpit/origins-templates.d/50-hostname
+  firewall-allow-direct:
+    description:
+      Firewall configuration to allow accessing Cockpit from directly-connected devices
+    requires:
+      filesets:
+        - description: Drop-in directory for XML fragment files to generate the nm-shared zone definition
+          tags:
+            - drop-in-assembly
+          paths:
+            - /etc/firewalld/zones.d/nm-shared
+    provides:
+      file-exports:
+        - description: Drop-in XML fragment for firewalld's Cockpit service
+          target: overlays/etc/firewalld/zones.d/nm-shared/51-service-cockpit.xml
+  firewall-allow-public:
+    description:
+      Firewall configuration to allow public access to Cockpit
+    requires:
+      filesets:
+        - description: Drop-in directory for XML fragment files to generate the public zone definition
+          tags:
+            - drop-in-assembly
+          paths:
+            - /etc/firewalld/zones.d/public
+    provides:
+      file-exports:
+        - description: Drop-in XML fragment for firewalld's Cockpit service
+          target: overlays/etc/firewalld/zones.d/public/51-service-cockpit.xml
+  frontend:
+    description: Provides access to the GUI
+    compose-files:
+      - frontend.compose.yml
+    requires:
+      networks:
+        - description: Overlay network for Caddy to connect to upstream services
+          name: caddy-ingress
+      services:
+        - tags: [caddy-docker-proxy]
+          port: 80
+          protocol: http
+        - port: 9090
+          protocol: http
+          paths:
+            - /admin/cockpit/*
+      filesets:
+        - description: Drop-in directory for config file fragments to generate the Cockpit config file
+          tags:
+            - drop-in-assembly
+          paths:
+            - /etc/cockpit/cockpit.conf.d
+    provides:
+      services:
+        - description: The Cockpit system administration dashboard
+          port: 80
+          protocol: http
+          paths:
+            - /admin/cockpit
+            - /admin/cockpit/*
+      file-exports:
+        - description: Drop-in config fragment to enable connection through a reverse-proxy
+          target: overlays/etc/cockpit/cockpit.conf.d/20-webservice-20-reverse-proxy.conf

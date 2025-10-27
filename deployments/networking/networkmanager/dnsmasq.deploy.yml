@@ -1,0 +1,6 @@
+package: /deployments/networking/networkmanager/dnsmasq.pkg
+features:
+  - dhcp-default-route
+  - custom-domain
+  - branded-custom-domain
+disabled: false

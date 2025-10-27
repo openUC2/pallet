@@ -1,0 +1,12 @@
+description: Generation of machine-unique DNS hostnames
+modifiers:
+  - type: add-feature
+    source: networking/machine-name
+  - type: add-feature
+    source: networking/firewall
+  - target: /packages/core/host/networking/hosts
+  - target: /deployments/host/networking/hosts.deploy.yml
+  - target: /packages/core/host/networking/networkmanager-dnsmasq
+  - target: /deployments/host/networking/networkmanager-dnsmasq.deploy.yml
+  - target: /packages/core/host/networking/avahi-cname
+  - target: /deployments/host/networking/avahi-cname.deploy.yml

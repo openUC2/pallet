@@ -1,0 +1,4 @@
+description: Support for firewall configuration
+modifiers:
+  - type: add-feature
+    source: networking/firewall

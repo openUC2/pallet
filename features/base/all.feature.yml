@@ -1,0 +1,12 @@
+description: All base infrastructure to enable running apps
+modifiers:
+  - type: add-feature
+    source: base/time
+  - type: add-feature
+    source: base/containers
+  - type: add-feature
+    source: base/http
+  - type: add-feature
+    source: base/metrics
+  - type: add-feature
+    source: base/mqtt

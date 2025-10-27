@@ -1,0 +1,5 @@
+package: /deployments/infra/docker.pkg
+features:
+  - start-before-network-online
+  - firewall-zone
+disabled: false

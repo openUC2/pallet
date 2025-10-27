@@ -1,0 +1,39 @@
+package:
+  description: Log viewer for Docker
+  maintainers:
+    - name: Ethan Li
+      email: lietk12@gmail.com
+  license: MIT
+  sources:
+    - https://github.com/amir20/dozzle
+
+deployment:
+  compose-files:
+    - deployment.compose.yml
+  requires:
+    filesets:
+      - description: Docker socket
+        paths:
+          - /run/docker.sock
+
+features:
+  frontend:
+    description: Provides access to the GUI
+    compose-files:
+      - frontend.compose.yml
+    requires:
+      networks:
+        - description: Overlay network for Caddy to connect to upstream services
+          name: caddy-ingress
+      services:
+        - tags: [caddy-docker-proxy]
+          port: 80
+          protocol: http
+    provides:
+      services:
+        - description: The Dozzle Docker log viewer
+          port: 80
+          protocol: http
+          paths:
+            - /admin/dozzle
+            - /admin/dozzle/*

@@ -1,0 +1,6 @@
+package: /deployments/networking/networkmanager/base.pkg
+features:
+  - direct-ip-addresses
+  - firewall-allow-direct
+  - firewall-allow-public
+disabled: false

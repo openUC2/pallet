@@ -1,0 +1,4 @@
+package: /deployments/admin/dozzle.pkg
+features:
+  - frontend
+disabled: false

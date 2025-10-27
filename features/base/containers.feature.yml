@@ -1,0 +1,4 @@
+description: Support for running containerized apps using Docker
+modifiers:
+  - target: /packages/core/host/docker
+  - target: /deployments/host/docker.deploy.yml

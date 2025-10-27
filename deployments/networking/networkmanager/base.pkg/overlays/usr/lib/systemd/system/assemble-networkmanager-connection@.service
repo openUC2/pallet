@@ -1,0 +1,14 @@
+[Unit]
+Description=Assemble drop-in NetworkManager connection fragment files into a NetworkManager connection file for %i
+ConditionFileIsExecutable=/usr/libexec/assemble-networkmanager-connection
+ConditionPathIsDirectory=/etc/NetworkManager/system-connections.d/%i
+Wants=assemble-networkmanager-connection-templated@%i.service
+After=assemble-networkmanager-connection-templated@%i.service
+Before=NetworkManager.service
+
+[Service]
+Type=oneshot
+ExecStart=/usr/libexec/assemble-networkmanager-connection %i
+
+[Install]
+WantedBy=NetworkManager.service

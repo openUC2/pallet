@@ -1,0 +1,27 @@
+package:
+  description:
+    Routing configuration to forward inbound network traffic for IP addresses for direct connections
+  maintainers:
+    - name: Ethan Li
+      email: lietk12@gmail.com
+  license: Apache-2.0
+  sources:
+    - https://github.com/openUC2/pallet
+
+deployment:
+  provides:
+    file-exports:
+      - description: Kernel parameters to enable routing between network interfaces
+        target: overlays/usr/lib/sysctl.d/20-routed-ap.conf
+
+features:
+  direct-inbound-any:
+    description:
+      Enable the machine to respond on any of its known static IPs (e.g. 192.168.4.1, 192.168.5.1)
+      for direct connections on any network interface
+    provides:
+      file-exports:
+        - description:
+            dnsmasq configuration to advertise the machine as a route to all IP addresses
+            assigned by the machine to devices connected on all interfaces.
+          target: overlays/etc/NetworkManager/dnsmasq-shared.d/35-dhcp-subnet-routes.conf

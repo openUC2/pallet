@@ -1,0 +1,6 @@
+description: Support for integrating HTTP APIs and browser apps in a single path hierarchy
+modifiers:
+  - type: add-feature
+    source: base/firewall
+  - target: /packages/core/infra/caddy-ingress
+  - target: /deployments/infra/caddy-ingress.deploy.yml

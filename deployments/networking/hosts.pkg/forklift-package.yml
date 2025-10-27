@@ -1,0 +1,94 @@
+package:
+  description: Auto-generation of a static table lookup for hostnames
+  maintainers:
+    - name: Ethan Li
+      email: lietk12@gmail.com
+  license: Apache-2.0
+  sources:
+    - https://github.com/openUC2/pallet
+
+deployment:
+  requires:
+    filesets:
+      - description: Shell script to string-interpolate a templated stdin to stdout
+        paths:
+          - /usr/libexec/render-templated-config
+  provides:
+    file-exports:
+      # Hosts file assembly:
+      - description:
+          Shell script to generate a hosts file from drop-in hosts fragment files
+        target: overlays/usr/libexec/assemble-hosts
+      - description: systemd service to run the assemble-hosts script during boot
+        target: overlays/usr/lib/systemd/system/assemble-hosts.service
+      - description: systemd service enablement for assemble-hosts.service
+        target: overlays/etc/systemd/system/multi-user.target.wants/assemble-hosts.service
+      - description: Symlink redirecting /etc/hosts to an auto-generated file
+        target: overlays/etc/hosts
+      # Drop-in hosts fragments to assemble by default:
+      - description:
+          Drop-in hosts fragment with comment describing hosts fragments drop-in directory
+        target: overlays/etc/hosts.d/10-header
+      - description: Drop-in hosts fragment with localhost hostnames
+        target: overlays/etc/hosts.d/20-localhost
+      - description: Drop-in hosts fragment with IPv6 multicast hostnames
+        target: overlays/etc/hosts.d/30-ipv6-multicast
+      # Templated origins list assembly:
+      - description:
+          systemd service to generate a drop-in hosts fragment file from drop-in hosts fragment
+          templates during boot
+        target: overlays/usr/lib/systemd/system/assemble-hosts-templated.service
+        # Note: we don't need to enable assemble-hosts-templated.service because
+        # assemble-hosts.service depends on it, and assemble-hosts-templated.service is
+        # useless without assemble-hosts.service.
+      - description:
+          Symlink redirecting /etc/hosts.d/50-generated-templated to an auto-generated file
+        target: overlays/etc/hosts.d/50-generated-templated
+      # Drop-in hosts fragment templates to assemble by default:
+      - description:
+          Drop-in hosts fragment template with comment describing the hosts fragment template
+          drop-in directory
+        target: overlays/etc/hosts-templates.d/10-README
+      - description:
+          "Drop-in hosts fragment template for the hostname, e.g. 'metal-slope-23501'"
+        target: overlays/etc/hosts-templates.d/20-hostname
+    filesets:
+      - description: Drop-in directory for hosts fragment files to generate the hosts file
+        tags:
+          - drop-in-assembly
+        paths:
+          - /etc/hosts.d
+      - description: Drop-in directory to specify templates of hosts fragment files
+        tags:
+          - drop-in-assembly
+          - templating-machine-name
+          - templating-hostname
+          - templating-custom-domain
+        paths:
+          - /etc/hosts-templates.d
+      - description: Auto-generated hosts file
+        paths:
+          - /run/overlays/generated/etc/hosts
+      - description:
+          Auto-generated hosts fragment file specifying some hostnames based on machine name,
+          hostname, and/or custom domain.
+        paths:
+          - /run/overlays/generated/etc/hosts.d/50-generated-templated
+
+features:
+  direct-custom-domain-home:
+    description:
+      "Use static IP addresses for direct connections for 'home' with a custom domain, e.g.
+      'home.uc2'"
+    provides:
+      file-exports:
+        - description: Drop-in hosts fragment template
+          target: overlays/etc/hosts-templates.d/30-direct-custom-domain-home
+  direct-custom-domain-machine-name:
+    description:
+      "Use static IP addresses for direct connections for the machine name with a custom domain,
+      e.g. 'metal-slope-23501.uc2'"
+    provides:
+      file-exports:
+        - description: Drop-in hosts fragment template
+          target: overlays/etc/hosts-templates.d/40-direct-custom-domain-machine-name

@@ -1,9 +1,0 @@
-{
-  "version": 0,
-  "tools": {
-    "imswitch": {
-      "label": "IMSwitch",
-      "path": "index.html"
-    }
-  }
-}

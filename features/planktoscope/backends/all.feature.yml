@@ -1,0 +1,8 @@
+description: All PlanktoScope-specific backend services
+modifiers:
+  - type: add-feature
+    source: planktoscope/backends/hardware
+  - type: add-feature
+    source: planktoscope/backends/segmenter
+  - type: add-feature
+    source: planktoscope/backends/gps

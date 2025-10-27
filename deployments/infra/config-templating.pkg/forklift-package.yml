@@ -1,0 +1,19 @@
+package:
+  description:
+    Script to string-interpolate a templated input with machine/networking name-related variables
+  maintainers:
+    - name: Ethan Li
+      email: lietk12@gmail.com
+  license: Apache-2.0
+  sources:
+    - https://github.com/openUC2/pallet
+
+deployment:
+  provides:
+    file-exports:
+      - description: Shell script to string-interpolate a templated stdin to stdout
+        target: overlays/usr/libexec/render-templated-config
+    filesets:
+      - description: Shell script to string-interpolate a templated stdin to stdout
+        paths:
+          - /usr/libexec/render-templated-config

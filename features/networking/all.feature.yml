@@ -1,0 +1,14 @@
+description: All network configurations for device access
+modifiers:
+  - type: add-feature
+    source: networking/machine-name
+  - type: add-feature
+    source: networking/firewall
+  - type: add-feature
+    source: networking/dns
+  - type: add-feature
+    source: networking/wired-access
+  - type: add-feature
+    source: networking/wireless-access
+  - target: /packages/core/host/networking/mac-addresses
+  - target: /deployments/host/networking/mac-addresses.deploy.yml

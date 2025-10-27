@@ -1,4 +1,0 @@
-package: /packages/filebrowser-su
-features:
-  - frontend
-disabled: false

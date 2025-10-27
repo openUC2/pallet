@@ -1,0 +1,4 @@
+description: Generation of a machine-unique name
+modifiers:
+  - target: /packages/core/host/machine-name
+  - target: /deployments/host/machine-name.deploy.yml

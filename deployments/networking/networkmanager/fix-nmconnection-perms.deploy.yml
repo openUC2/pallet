@@ -1,0 +1,2 @@
+package: /deployments/networking/networkmanager/fix-nmconnection-perms.pkg
+disabled: false

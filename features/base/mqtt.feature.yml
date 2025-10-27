@@ -1,0 +1,6 @@
+description: Support for exposing MQTT APIs via a single message broker
+modifiers:
+  - type: add-feature
+    source: base/firewall
+  - target: /packages/core/infra/mosquitto
+  - target: /deployments/infra/mosquitto.deploy.yml

@@ -1,0 +1,5 @@
+package: /deployments/networking/firewalld.pkg
+features:
+  - zone-nm-shared
+  - zone-public
+disabled: false
