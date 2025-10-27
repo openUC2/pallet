@@ -1,0 +1,4 @@
+description: Support for running containerized apps using Docker
+modifiers:
+  - target: /deployments/infra/docker.pkg
+  - target: /deployments/infra/docker.deploy.yml

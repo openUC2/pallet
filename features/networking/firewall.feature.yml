@@ -1,4 +1,4 @@
 description: Firewall configurations to allow access
 modifiers:
-  - target: /packages/core/host/networking/firewalld
-  - target: /deployments/host/networking/firewalld.deploy.yml
+  - target: /deployments/networking/firewalld.pkg
+  - target: /deployments/networking/firewalld.deploy.yml

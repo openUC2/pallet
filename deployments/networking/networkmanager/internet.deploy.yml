@@ -1,5 +1,0 @@
-package: /deployments/networking/networkmanager/internet.pkg
-features:
-  - wlan0
-  - wlan1
-disabled: false

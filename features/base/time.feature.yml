@@ -1,4 +1,0 @@
-description: Time-keeping & synchronization service
-modifiers:
-  - target: /packages/core/host/chronyd
-  - target: /deployments/host/chronyd.deploy.yml

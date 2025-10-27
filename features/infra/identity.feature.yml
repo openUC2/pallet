@@ -1,0 +1,6 @@
+description: Generation of a machine-unique name
+modifiers:
+  - target: /deployments/infra/machine-name.pkg
+  - target: /deployments/infra/machine-name.deploy.yml
+  - target: /deployments/infra/config-templating.pkg
+  - target: /deployments/infra/config-templating.deploy.yml

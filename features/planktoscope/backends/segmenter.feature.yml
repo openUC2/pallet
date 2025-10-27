@@ -1,8 +1,0 @@
-description: PlanktoScope segmenter backend service
-modifiers:
-  - type: add-feature
-    source: base/http
-  - type: add-feature
-    source: base/mqtt
-  - target: /packages/core/apps/planktoscope/device-backend/processing/segmenter
-  - target: /deployments/apps/ps/backend/proc-segmenter.deploy.yml

@@ -1,6 +1,4 @@
 description: Interface for remote command-line access
 modifiers:
-  - type: add-feature
-    source: base/firewall
-  - target: /packages/core/host/sshd
-  - target: /deployments/host/sshd.deploy.yml
+  - target: /deployments/admin/sshd.pkg
+  - target: /deployments/admin/sshd.deploy.yml

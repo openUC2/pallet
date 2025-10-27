@@ -3,7 +3,7 @@ modifiers:
   - type: add-feature
     source: admin/containers
   - type: add-feature
-    source: admin/metrics
+    source: admin/fs
   - type: add-feature
     source: admin/ssh
   - type: add-feature

@@ -1,0 +1,4 @@
+description: All features for development tools
+modifiers:
+  - type: add-feature
+    source: dev/containers
