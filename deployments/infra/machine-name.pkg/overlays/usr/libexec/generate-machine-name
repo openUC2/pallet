@@ -2,6 +2,11 @@
 
 machine_name=""
 
+# Treat C.UTF-8 as en_US.UTF-8 for machine-name generation
+if [ "$LANG" == "C.UTF-8" ]; then
+  LANG=en_US.UTF-8
+fi
+
 # Allow preempting automatic machine-name generation behavior with /etc/machine-name:
 if [ -f /etc/machine-name ]; then
   machine_name="$(sed 's~#.*$~~g' /etc/machine-name | tr -d '[:space:]')"
