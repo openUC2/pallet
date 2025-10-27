@@ -1,0 +1,21 @@
+[Unit]
+Description=Assemble and process (with string interpolation) drop-in hosts fragment template files into a drop-in hosts fragment file
+ConditionFileIsExecutable=/usr/libexec/render-templated-config
+ConditionPathIsDirectory=/etc/hosts-templates.d
+# If there are services to generate a machine name and hostname (which can optionally be used in
+# templates), run those services first:
+Wants=generate-machine-name.service
+After=generate-machine-name.service
+Wants=generate-hostname-templated.service
+After=generate-hostname-templated.service
+Wants=network-pre.target
+Before=network-pre.service
+
+[Service]
+Type=oneshot
+ExecStartPre=mkdir -p /run/overlays/generated/etc/hosts.d
+ExecStart=sh -c "\
+  cat /etc/hosts-templates.d/* | \
+    /usr/libexec/render-templated-config \
+      >/run/overlays/generated/etc/hosts.d/50-generated-templated \
+"

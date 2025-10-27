@@ -1,0 +1,19 @@
+# The Origins line of the Cockpit config at /etc/cockpit/cockpit.conf is automatically generated
+# from origins drop-in list files in /etc/cockpit/origins.d.
+# Each origins drop-in list file can consist of multiple lines, with one allowed origin per line.
+
+# To add a new value, you can deploy a Forklift package which exports an origins drop-in file
+# to a target in overlays/etc/cockpit/origins.d, or you can manually create a new origins drop-in
+# file in /etc/cockpit/origins.d (the file will actually be saved in
+# /var/lib/overlays/overrides/etc/cockpit/origins.d, but it will appear as if it's in
+# /etc/cockpit/origins.d).
+# To override an existing origin, you should disable the Forklift package (or the feature of the
+# Forklift package) which add the origin via a drop-in file; if that's not possible, you can
+# directly edit the origins drop-in file in /etc/cockpit/origins.d which adds the origin - your
+# changes will override any identically-named file provided by Forklift until you delete the
+# corresponding file with your changes from /var/lib/overlays/overrides/etc/cockpit/origins.d.
+
+# To apply your changes immediately without rebooting, restart the
+# assemble-cockpit-origins.service systemd service, then restart the assemble-cockpit-config.service
+# systemd service, and then restart the cockpit.service systemd service. If you made any changes in
+# /var/lib/overlays/overrides/etc/cockpit/origins.d, you will have to reboot.

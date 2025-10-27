@@ -1,0 +1,8 @@
+description: Interfaces for managing containerized apps
+modifiers:
+  - type: add-feature
+    source: infra/containers
+  - type: add-feature
+    source: infra/http
+  - target: /deployments/admin/dozzle.pkg
+  - target: /deployments/admin/dozzle.deploy.yml

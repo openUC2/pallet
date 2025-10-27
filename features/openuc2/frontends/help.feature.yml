@@ -1,0 +1,6 @@
+description: PlanktoScope usage help resources
+modifiers:
+  - type: add-feature
+    source: base/http
+  - target: /packages/core/apps/planktoscope/docs
+  - target: /deployments/apps/ps/docs.deploy.yml

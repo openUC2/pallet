@@ -1,0 +1,4 @@
+package: /deployments/networking/interface-forwarding.pkg
+features:
+  - direct-inbound-any
+disabled: false

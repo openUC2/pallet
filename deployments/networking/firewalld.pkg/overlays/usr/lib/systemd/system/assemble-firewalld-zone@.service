@@ -1,0 +1,13 @@
+[Unit]
+Description=Assemble drop-in XML fragment files into a firewalld zone file for %i
+ConditionFileIsExecutable=/usr/libexec/assemble-firewalld-zone
+ConditionPathIsDirectory=/etc/firewalld/zones.d/%i
+Before=firewalld.service
+Before=NetworkManager.service
+
+[Service]
+Type=oneshot
+ExecStart=/usr/libexec/assemble-firewalld-zone %i
+
+[Install]
+WantedBy=firewalld.service

@@ -1,0 +1,8 @@
+description: Exposing of direct access to the device via wired connections
+modifiers:
+  - type: add-feature
+    source: networking/dns
+  - target: /deployments/networking/interface-forwarding.pkg
+  - target: /deployments/networking/interface-forwarding.deploy.yml
+  - target: /deployments/networking/networkmanager/base.pkg
+  - target: /deployments/networking/networkmanager/base.deploy.yml

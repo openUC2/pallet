@@ -1,0 +1,8 @@
+description: Tools for developing container apps
+modifiers:
+  - type: add-feature
+    source: infra/containers
+  - target: /deployments/dev/dive.pkg
+  - target: /deployments/dev/dive.deploy.yml
+  - target: /deployments/dev/crane.pkg
+  - target: /deployments/dev/crane.deploy.yml

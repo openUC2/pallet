@@ -1,0 +1,4 @@
+description: Interface for remote command-line access
+modifiers:
+  - target: /deployments/admin/sshd.pkg
+  - target: /deployments/admin/sshd.deploy.yml

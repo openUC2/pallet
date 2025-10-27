@@ -1,0 +1,12 @@
+package: /deployments/admin/cockpit.pkg
+features:
+  - allow-unencrypted
+  - allow-origins-direct-static-ips
+  - allow-origins-simplified-branded-mdns-names
+  - allow-origins-templated-custom-domain-home
+  - allow-origins-templated-mdns-hostname
+  - allow-origins-templated-hostname
+  - firewall-allow-direct
+  - firewall-allow-public
+  - frontend
+disabled: false

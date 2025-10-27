@@ -1,0 +1,64 @@
+package:
+  description: Automatically generates a machine name from a hardware serial number
+  maintainers:
+    - name: Ethan Li
+      email: lietk12@gmail.com
+  license: Apache-2.0
+  sources:
+    # Ambiently-provided software (Apache-2.0):
+    - https://github.com/PlanktoScope/machine-name
+    # Auto-generation scripts (Apache-2.0):
+    - https://github.com/openUC2/pallet
+
+deployment:
+  provides:
+    file-exports:
+      - description:
+          Shell script to generate a machine name based on the Raspberry Pi's serial number
+        target: overlays/usr/libexec/generate-machine-name
+      - description: systemd service to run the generate-machine-name script during boot
+        target: overlays/usr/lib/systemd/system/generate-machine-name.service
+      - description: systemd service enablement for generate-machine-name.service
+        target: overlays/etc/systemd/system/sysinit.target.wants/generate-machine-name.service
+      - description: machine-name binary
+        source-type: oci-image
+        url: ghcr.io/planktoscope/machine-name:0.1.3
+        source: machine-name
+        target: overlays/usr/bin/machine-name
+    filesets:
+      - description: Auto-generated file with the machine name
+        paths:
+          - /run/machine-name
+
+features:
+  generate-hostname-templated:
+    description: Updates the hostname from a template which allows inclusion of the machine name
+    provides:
+      file-exports:
+        - description: Shell script to generate a hostname file to be overlaid into /etc/hostname
+          target: overlays/usr/libexec/generate-hostname-templated
+        - description:
+            systemd service to run the generate-hostname-templated script during early boot
+          target: overlays/usr/lib/systemd/system/generate-hostname-templated.service
+        - description: systemd service enablement for generate-hostname-templated.service
+          target: overlays/etc/systemd/system/sysinit.target.wants/generate-hostname-templated.service
+        - description: Symlink redirecting /etc/hostname to the auto-generated hostname file
+          source: overlays/etc/hostname
+          target: overlays/etc/hostname
+        - description:
+            systemd service to make systemd-homed.service update the live hostname to match /etc/hostname
+          target: overlays/usr/lib/systemd/system/update-hostname.service
+        - description: systemd service enablement for update-hostname.service
+          target: overlays/etc/systemd/system/multi-user.target.wants/update-hostname.service
+      filesets:
+        - description: Auto-generated file with the hostname
+          paths:
+            - /run/overlays/generated/etc/hostname
+  hostname-template-branded:
+    description: >
+      Includes a branded prefix like 'openuc2-' as a prefix in the hostname, if it's generated from
+      the machine name
+    provides:
+      file-exports:
+        - description: "Hostname template which includes a branded prefix like 'openuc2-' in the hostname"
+          target: overlays/etc/hostname-template

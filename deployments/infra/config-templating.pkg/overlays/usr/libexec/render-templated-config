@@ -1,0 +1,82 @@
+#!/bin/bash -eu
+
+hostname=""
+machine_name=""
+custom_domain=""
+
+# Load values of interpolated variables:
+if [ -f /etc/hostname ]; then
+  hostname="$(sed 's~#.*$~~g' /etc/hostname | tr -d '[:space:]')"
+  echo "Hostname: $hostname" >&2
+  hostname_32="${hostname:0:32}"
+  hostname_24="${hostname:0:24}"
+  hostname_16="${hostname:0:16}"
+  hostname_12="${hostname:0:12}"
+fi
+if [ -f /run/machine-name ]; then
+  machine_name="$(sed 's~#.*$~~g' /run/machine-name | tr -d '[:space:]')"
+  echo "Machine name: $machine_name" >&2
+  machine_name_32="${machine_name:0:32}"
+  machine_name_24="${machine_name:0:24}"
+  machine_name_16="${machine_name:0:16}"
+  machine_name_12="${machine_name:0:12}"
+fi
+if [ -f /etc/custom-domain ]; then
+  custom_domain="$(sed 's~#.*$~~g' /etc/custom-domain | tr -d '[:space:]')"
+  echo "Custom domain: $custom_domain" >&2
+  custom_domain_16="${custom_domain:0:16}"
+  custom_domain_8="${custom_domain:0:8}"
+fi
+
+# Load and string-interpolate templates:
+config="$(</dev/stdin)"
+if [ "$hostname" = "" ]; then
+  echo "Warning: hostname was not set!" >&2
+  config="$(
+    echo "$config" |
+      sed '/^[^#]/ s~\(.*{hostname(-[0-9]+)?}.*\)~# Disabled because {hostname} is unset: \1~'
+  )"
+else
+  config="$(
+    echo "$config" | sed \
+      -e "/^[^#]/ s~{hostname}~${hostname}~g" \
+      -e "/^[^#]/ s~{hostname-32}~${hostname_32}~g" \
+      -e "/^[^#]/ s~{hostname-24}~${hostname_24}~g" \
+      -e "/^[^#]/ s~{hostname-16}~${hostname_16}~g" \
+      -e "/^[^#]/ s~{hostname-12}~${hostname_12}~g"
+  )"
+fi
+
+if [ "$machine_name" = "" ]; then
+  echo "Warning: machine-name was not set!" >&2
+  config="$(
+    echo "$config" |
+      sed '/^[^#]/ s~\(.*{machine-name(-[0-9]+)?}.*\)~# Disabled because {machine-name} is unset: \1~'
+  )"
+else
+  config="$(
+    echo "$config" | sed \
+      -e "/^[^#]/ s~{machine-name}~${machine_name}~g" \
+      -e "/^[^#]/ s~{machine-name-32}~${machine_name_32}~g" \
+      -e "/^[^#]/ s~{machine-name-24}~${machine_name_24}~g" \
+      -e "/^[^#]/ s~{machine-name-16}~${machine_name_16}~g" \
+      -e "/^[^#]/ s~{machine-name-12}~${machine_name_12}~g"
+  )"
+fi
+
+if [ "$custom_domain" = "" ]; then
+  echo "Warning: custom-domain was not set!" >&2
+  config="$(
+    echo "$config" |
+      sed '/^[^#]/ s~\(.*{custom-domain(-[0-9]+)?}.*\)~# Disabled because {custom-domain} is unset: \1~'
+  )"
+else
+  config="$(
+    echo "$config" | sed \
+      -e "/^[^#]/ s~{custom-domain}~${custom_domain}~g" \
+      -e "/^[^#]/ s~{custom-domain-16}~${custom_domain_16}~g" \
+      -e "/^[^#]/ s~{custom-domain-8}~${custom_domain_8}~g"
+  )"
+fi
+
+echo "$config"

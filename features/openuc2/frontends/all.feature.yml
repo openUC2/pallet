@@ -1,0 +1,8 @@
+description: All PlanktoScope-specific frontend apps
+modifiers:
+  - type: add-feature
+    source: planktoscope/frontends/files
+  - type: add-feature
+    source: planktoscope/frontends/dashboards
+  - type: add-feature
+    source: planktoscope/frontends/help

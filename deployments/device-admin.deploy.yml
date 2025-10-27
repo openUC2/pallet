@@ -1,4 +1,0 @@
-package: /packages/device-admin
-features:
-  - frontend
-disabled: false

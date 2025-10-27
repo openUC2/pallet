@@ -1,0 +1,5 @@
+package: /deployments/networking/avahi/cname.pkg
+features:
+  - register-openuc2-local
+  - register-uc2-local
+disabled: false

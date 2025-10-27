@@ -1,2 +1,2 @@
-package: /packages/dev/dive
+package: /deployments/dev/dive.pkg
 disabled: false

@@ -1,0 +1,5 @@
+
+[connection]
+id=eth1-default
+type=ethernet
+interface-name=eth1

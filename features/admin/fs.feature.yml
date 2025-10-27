@@ -1,0 +1,8 @@
+description: System file browsing
+modifiers:
+  - type: add-feature
+    source: infra/http
+  - target: /deployments/admin/filebrowser-rootfs.pkg
+  - target: /deployments/admin/filebrowser-rootfs.deploy.yml
+  - target: /deployments/admin/filebrowser-rootfs-su.pkg
+  - target: /deployments/admin/filebrowser-rootfs-su.deploy.yml

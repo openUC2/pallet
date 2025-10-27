@@ -1,2 +1,2 @@
-package: /packages/dev/crane
+package: /deployments/dev/crane.pkg
 disabled: false

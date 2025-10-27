@@ -1,7 +1,0 @@
-modifiers:
-  - type: add
-    target: /deployments/apps
-    only-matching-any:
-      - filebrowser-root.deploy.yml
-      - dozzle.deploy.yml
-      - cockpit.deploy.yml

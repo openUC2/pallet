@@ -1,0 +1,10 @@
+[Unit]
+Description=Assemble drop-in Cockpit origins list files into a drop-in Cockpit config file fragment
+ConditionFileIsExecutable=/usr/libexec/assemble-cockpit-origins
+ConditionPathIsDirectory=/etc/cockpit/origins.d
+Wants=assemble-cockpit-origins-templated.service
+After=assemble-cockpit-origins-templated.service
+
+[Service]
+Type=oneshot
+ExecStart=/usr/libexec/assemble-cockpit-origins

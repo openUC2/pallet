@@ -1,0 +1,5 @@
+package: /deployments/infra/device-portal.pkg
+features:
+  - frontend
+  - deploy-rpi
+disabled: false

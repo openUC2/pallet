@@ -1,2 +1,2 @@
-package: /packages/lepmon
+package: /deployments/lepmon.pkg
 disabled: true

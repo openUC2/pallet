@@ -1,0 +1,70 @@
+package:
+  description: Enablement of the SSH server ambiently provided by the OS
+  maintainers:
+    - name: Ethan Li
+      email: lietk12@gmail.com
+  license: SSH-OpenSSH
+  sources:
+    - https://github.com/openssh/openssh-portable
+
+host:
+  provides:
+    filesets:
+      - description: systemd service to run the SSH server
+        paths:
+          - /usr/lib/systemd/system/ssh.service
+      - description: Binary to generate SSH keys
+        paths:
+          - /usr/bin/ssh-keygen
+
+features:
+  ssh-server-enabled:
+    description: Enables the system-provided SSH server
+    provides:
+      listeners:
+        - description: SSH server
+          port: 22
+          protocol: tcp
+      services:
+        - description: SSH server
+          port: 22
+          protocol: ssh
+      file-exports:
+        - description: systemd service enablement for the system-provided ssh.service
+          target: overlays/etc/systemd/system/multi-user.target.wants/ssh.service
+  ensure-ssh-host-keys:
+    description: Regenerates ssh host keys at boot if they're missing
+    provides:
+      file-exports:
+        - description: systemd service to regenerate SSH host keys during boot if they're missing
+          target: overlays/usr/lib/systemd/system/ensure-ssh-host-keys.service
+        - description: systemd service enablement for ensure-ssh-host-keys.service
+          target: overlays/etc/systemd/system/multi-user.target.wants/ensure-ssh-host-keys.service
+  firewall-allow-direct:
+    description:
+      Firewall configuration to allow accessing the SSH server from directly-connected devices
+    requires:
+      filesets:
+        - description: Drop-in directory for XML fragment files to generate the nm-shared zone definition
+          tags:
+            - drop-in-assembly
+          paths:
+            - /etc/firewalld/zones.d/nm-shared
+    provides:
+      file-exports:
+        - description: Drop-in XML fragment for firewalld's SSH service
+          target: overlays/etc/firewalld/zones.d/nm-shared/50-service-ssh.xml
+  firewall-allow-public:
+    description:
+      Firewall configuration to allow public access to the SSH server
+    requires:
+      filesets:
+        - description: Drop-in directory for XML fragment files to generate the public zone definition
+          tags:
+            - drop-in-assembly
+          paths:
+            - /etc/firewalld/zones.d/public
+    provides:
+      file-exports:
+        - description: Drop-in XML fragment for firewalld's SSH service
+          target: overlays/etc/firewalld/zones.d/public/50-service-ssh.xml

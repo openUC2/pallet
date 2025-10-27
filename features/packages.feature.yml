@@ -1,0 +1,4 @@
+description: All packages
+modifiers:
+  - target: /deployments
+    only-matching-any: '**/*.pkg'
