@@ -11,3 +11,4 @@ curl -L "https://github.com/mikefarah/yq/releases/download/v$version/yq_linux_${
 
 echo "Moving $tmp_bin/yq to $parent/yq..."
 mv "$tmp_bin/yq" "$parent/yq" 2>/dev/null || sudo mv "$tmp_bin/yq" "$parent/yq"
+sudo chmod a+x "$parent/yq"
