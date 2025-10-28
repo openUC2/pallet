@@ -123,11 +123,14 @@ jobs:
           # resolves noisy (but harmless) error messages from sudo.
           args: >-
             --bind "$(pwd)/os-build":/run/os-build
-            --bind "$(pwd)":/home/pi/.local/share/forklift/pallet/
+            --bind "$(pwd)":/run/pallet
             --bind ${{ steps.download-hik-driver.outputs.destination }}:${{ steps.download-hik-driver.outputs.destination }}
             --capability=CAP_NET_ADMIN
             --machine=raspberrypi
           run: |
+            echo "Provisioning local pallet..."
+            mkdir -p /home/pi/.local/share/forklift
+            cp -r /run/pallet /home/pi/.local/share/forklift/pallet
             echo "Running setup scripts..."
             export DEBIAN_FRONTEND=noninteractive
             /run/os-build/setup.sh
