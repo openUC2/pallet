@@ -32,22 +32,28 @@ forklift --stage-store /var/lib/forklift/stages plt stage --cache-img=false
 forklift --stage-store /var/lib/forklift/stages stage add-bundle-name factory-reset next
 
 # Set up Forklift upgrade checks
+# TODO: add a forklift command to print the pallet path of the dev pallet, so that we won't need to
+# install yq to do the same thing (maybe we can embed a subset of yq in a `forklift inspector yaml`
+# command?)
+echo "Downloading temporary tool to set pallet upgrade query..."
+tmp_bin="$(mktemp -d --tmpdir=/tmp bin.XXXXXXX)"
+"$config_files_root/download-yq.sh" "$tmp_bin"
+export PATH="$tmp_bin:$PATH"
+
 pallet_upgrade_version_query="$(cat "$config_files_root/forklift-pallet-upgrade-version-query")"
-forklift pallet set-upgrade-query "@$pallet_upgrade_version_query"
+pallet_path="$(yq '.pallet.path' "$HOME/.local/share/forklift/pallet/forklift-pallet.yml")"
+forklift pallet set-upgrade-query "$pallet_path@$pallet_upgrade_version_query"
 
 # Pre-download container images without Docker
 
 echo "Downloading temporary tools to pre-download container images..."
-tmp_bin="$(mktemp -d --tmpdir=/tmp bin.XXXXXXX)"
 "$config_files_root/download-crane.sh" "$tmp_bin"
 "$config_files_root/download-rush.sh" "$tmp_bin"
-export PATH="$tmp_bin:$PATH"
 
 echo "Pre-downloading container images..."
 container_platform="linux/$(
   dpkg --print-architecture | sed -e 's~armhf~arm/v7~' -e 's~aarch64~arm64~'
 )"
-export PATH="$tmp_bin:$PATH"
 forklift plt ls-img |
   rush "$config_files_root/precache-image.sh" \
     {} "$HOME/.cache/forklift/containers/docker-archives" "$container_platform"
