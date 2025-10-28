@@ -122,7 +122,7 @@ jobs:
 
       - name: Pre-download container images
         env:
-          ARCH: ${{ matrix.platform.arch }}
+          ARCH: ${{ inputs.arch }}
           PRECACHE_PATH: ${{ steps.setup-precaching.outputs.path }}
         run: |
           set -x
@@ -140,7 +140,7 @@ jobs:
 
           echo "Pre-downloading container images..."
           export PATH="$tmp_bin:$PATH"
-          container_platform="linux/$ARCH"
+          container_platform="linux/$(echo "$ARCH" | sed -e 's~armhf~arm/v7~' -e 's~aarch64~arm64~')"
           rush "$forklift_setup_root/precache-image.sh" {} "$PRECACHE_PATH" "$container_platform" \
             < "$PRECACHE_PATH/images-list"
 
