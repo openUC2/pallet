@@ -10,6 +10,7 @@ Before=systemd-hostnamed.service
 [Service]
 Type=oneshot
 ExecStartPre=sh -c "echo 'unknown' >/run/machine-name"
+Environment="LANG=en_US.UTF-8"
 ExecStart=/usr/libexec/generate-machine-name
 
 [Install]
