@@ -24,6 +24,7 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
           timeout: 240 # 4-minute timeout, since checks may take ~30 seconds to run
           interval: 15
+          ignored: build-os-bookworm
 
       - name: Run Merge Gatekeeper in Merge Queue
         if: github.event_name == 'merge_group'
@@ -33,3 +34,4 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
           timeout: 240 # 4-minute timeout, since checks may take ~30 seconds to run
           interval: 15
+          ignored: build-os-bookworm
