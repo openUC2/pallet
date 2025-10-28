@@ -108,17 +108,14 @@ jobs:
           key: "container-images-${{ matrix.platform.arch }}-${{ steps.setup-precaching.outputs.container_list_hash }}"
           path: ${{ steps.setup-precaching.outputs.path }}
 
-      # TODO(ethanjli): For now, we're skipping these remaining steps because we run out of disk
-      # space. Maybe once I finish https://github.com/openUC2/ImSwitch/pull/175, we'll be able to
-      # re-enable these steps in this CI workflow.
-      # - name: Load cached container images into Docker
-      #   env:
-      #     PRECACHE_PATH: ${{ steps.setup-precaching.outputs.path }}
-      #   run: |
-      #     tmp_bin="$(mktemp -d --tmpdir=/tmp bin.XXXXXXX)"
-      #     ".github/download-rush.sh" "$tmp_bin"
-      #     export PATH="$tmp_bin:$PATH"
-      #     forklift dev plt ls-img | rush ".github/load-precached-image.sh" {} "$PRECACHE_PATH"
-      #
-      # - name: Try to stage the pallet
-      #   run: forklift dev plt stage
+      - name: Load cached container images into Docker
+        env:
+          PRECACHE_PATH: ${{ steps.setup-precaching.outputs.path }}
+        run: |
+          tmp_bin="$(mktemp -d --tmpdir=/tmp bin.XXXXXXX)"
+          ".github/download-rush.sh" "$tmp_bin"
+          export PATH="$tmp_bin:$PATH"
+          forklift dev plt ls-img | rush ".github/load-precached-image.sh" {} "$PRECACHE_PATH"
+
+      - name: Try to stage the pallet
+        run: forklift dev plt stage
