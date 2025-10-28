@@ -41,3 +41,7 @@ echo "Create Desktop Icons"
 sudo usermod -a -G dialout "$USER"
 sudo usermod -a -G tty "$USER"
 echo "Please reboot to take effect of adding serial devices to user group"
+
+# Clean up any unnecessary pip/etc. files
+pip3 cache purge || true
+rm -rf "$HOME/.cache/pip"

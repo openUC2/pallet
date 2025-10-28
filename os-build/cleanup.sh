@@ -10,6 +10,10 @@ sudo apt-get remove -y gcc-12 || true
 sudo apt-get autoremove -y
 sudo apt-get clean -y
 
+# Clean up any unnecessary pip/etc. files
+pip3 cache purge || true
+rm -rf "$HOME/.cache/pip"
+
 # Clear machine-id so that it will be regenerated on the next boot
 # (refer to https://www.freedesktop.org/software/systemd/man/latest/machine-id.html):
 sudo bash -c 'printf "" > /var/lib/dbus/machine-id'

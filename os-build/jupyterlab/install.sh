@@ -14,10 +14,10 @@ jupyter notebook --generate-config
 
 echo "=== Setting up Jupyter password ==="
 HASHED_PASS=$(python3 -c "from notebook.auth import passwd; print(passwd())")
-echo "c.NotebookApp.password = u'$HASHED_PASS'" >> ~/.jupyter/jupyter_notebook_config.py
-echo "c.NotebookApp.ip = '0.0.0.0'" >> ~/.jupyter/jupyter_notebook_config.py
-echo "c.NotebookApp.open_browser = False" >> ~/.jupyter/jupyter_notebook_config.py
-echo "c.NotebookApp.port = 8888" >> ~/.jupyter/jupyter_notebook_config.py
+echo "c.NotebookApp.password = u'$HASHED_PASS'" >>~/.jupyter/jupyter_notebook_config.py
+echo "c.NotebookApp.ip = '0.0.0.0'" >>~/.jupyter/jupyter_notebook_config.py
+echo "c.NotebookApp.open_browser = False" >>~/.jupyter/jupyter_notebook_config.py
+echo "c.NotebookApp.port = 8888" >>~/.jupyter/jupyter_notebook_config.py
 
 echo "=== Creating systemd service ==="
 cat <<EOF | sudo tee /etc/systemd/system/jupyter-notebook.service
@@ -44,3 +44,7 @@ sudo systemctl start jupyter-notebook
 
 echo "=== Done ==="
 echo "Access it at: http://<your-pi-ip>:8888 (password protected)"
+
+# Clean up any unnecessary pip/etc. files
+pip3 cache purge || true
+rm -rf "$HOME/.cache/pip"
