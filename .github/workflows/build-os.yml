@@ -95,6 +95,82 @@ jobs:
           mode: to
           size: 16G
 
+      # PRE-CACHE CONTAINER IMAGES
+      # Because Docker Hub rate-limits container image pulls and we want to pull the same set of
+      # images many times for matrix checks, we pre-cache container images so that they can be
+      # reused across workflow runs.
+      # TODO: move some of this into a separate GitHub Action and/or Forklift command, to keep
+      # this workflow simpler
+
+      - name: Set up container image pre-caching
+        id: setup-precaching
+        run: |
+          mkdir -p /tmp/forklift/container-image-precache
+          echo "path=/tmp/forklift/container-image-precache" >> $GITHUB_OUTPUT
+          container_list_hash="$(forklift dev plt ls-img | sha256sum | cut -d ' ' -f 1)"
+          echo "container_list_hash=$container_list_hash" >> $GITHUB_OUTPUT
+
+      - name: Try to load container image pre-cache from GitHub Actions cache
+        id: restore-precache
+        uses: actions/cache/restore@v4
+        with:
+          key: "container-images-${{ matrix.platform.arch }}-${{ steps.setup-precaching.outputs.container_list_hash }}"
+          path: ${{ steps.setup-precaching.outputs.path }}
+
+      - name: Pre-download container images
+        env:
+          ARCH: ${{ matrix.platform.arch }}
+          PRECACHE_PATH: ${{ steps.setup-precaching.outputs.path }}
+        run: |
+          set -x
+          if [ -f "$PRECACHE_PATH/images-list" ]; then
+            echo "Pre-downloaded container images can be loaded from the GitHub Actions cache!"
+            exit 0
+          fi
+          forklift dev plt ls-img > "$PRECACHE_PATH/images-list"
+          forklift_setup_root="./os-build/forklift"
+
+          echo "Downloading temporary tools to pre-download container images..."
+          tmp_bin="$(mktemp -d --tmpdir=/tmp bin.XXXXXXX)"
+          "$forklift_setup_root/download-crane.sh" "$tmp_bin"
+          "$forklift_setup_root/download-rush.sh" "$tmp_bin"
+
+          echo "Pre-downloading container images..."
+          export PATH="$tmp_bin:$PATH"
+          container_platform="linux/$ARCH"
+          rush "$forklift_setup_root/precache-image.sh" {} "$PRECACHE_PATH" "$container_platform" \
+            < "$PRECACHE_PATH/images-list"
+
+      - name: Save container image pre-cache to GitHub Actions cache
+        if: "!steps.restore-precache.outputs.cache-hit"
+        uses: actions/cache/save@v4
+        with:
+          key: "container-images-${{ matrix.platform.arch }}-${{ steps.setup-precaching.outputs.container_list_hash }}"
+          path: ${{ steps.setup-precaching.outputs.path }}
+
+      # Note: the following step isn't strictly necessary, but it's nice to separate the GitHub
+      # Actions log outputs for setting up pinspawn-action for the first time from the logs for
+      # pre-downloading container images
+      - name: Install pinspawn-action dependencies
+        uses: ethanjli/pinspawn-action@v0.1.5
+        with:
+          image: ${{ steps.expand-image.outputs.destination }}
+          run: echo "Done!"
+
+      - name: Copy pre-downloaded container images into OS image
+        uses: ethanjli/pinspawn-action@v0.1.5
+        with:
+          image: ${{ steps.expand-image.outputs.destination }}
+          user: ${{ env.SETUP_USER }}
+          args: >-
+            --bind ${{ steps.setup-precaching.outputs.path }}:/run/container-images
+            --machine=raspberrypi
+          run: |
+            local_cache="$HOME/.cache/forklift/containers/docker-archives"
+            mkdir -p "$local_cache"
+            sudo cp -r /run/container-images/* "$local_cache"
+            sudo chown $USER -R "$local_cache"
+
       # RUN OS SETUP SCRIPTS
 
       - name: Download and cache Hik Driver
