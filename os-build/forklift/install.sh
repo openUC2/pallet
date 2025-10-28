@@ -33,8 +33,8 @@ forklift --stage-store /var/lib/forklift/stages stage add-bundle-name factory-re
 
 # Set up Forklift upgrade checks
 # TODO: add a forklift command to print the pallet path of the dev pallet, so that we won't need to
-# install yq to do the same thing (maybe we can embed a subset of yq in a `forklift inspector yaml`
-# command?)
+# install yq to do the same thing (maybe we can add a `forklift plt locate` command, and add a
+# `forklift plt query-yaml {query} {file}` command which just uses yaml?)
 echo "Downloading temporary tool to set pallet upgrade query..."
 tmp_bin="$(mktemp -d --tmpdir=/tmp bin.XXXXXXX)"
 "$config_files_root/download-yq.sh" "$tmp_bin"
