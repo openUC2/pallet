@@ -18,6 +18,7 @@ sudo bash -c 'printf "uninitialized\n" > /etc/machine-id'
 # Clear other secrets (refer to https://systemd.io/BUILDING_IMAGES/):
 sudo rm -f /var/lib/systemd/random-seed
 sudo rm -f /var/lib/systemd/credential.secret
+sudo rm -f /var/lib/NetworkManager/secret_key
 
 # Remove SSH keys:
 sudo rm -f /etc/ssh/ssh_host_*_key*
