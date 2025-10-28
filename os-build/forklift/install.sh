@@ -28,7 +28,7 @@ if ! sudo systemctl start "bind-.local-share-forklift-stages@home-$USER.service"
 fi
 
 # Stage the local pallet
-forklift --stage-store /var/lib/forklift/stages plt switch --cache-img=false "$pallet_path@$pallet_version"
+forklift --stage-store /var/lib/forklift/stages plt stage
 forklift --stage-store /var/lib/forklift/stages stage add-bundle-name factory-reset next
 
 # Set up Forklift upgrade checks
