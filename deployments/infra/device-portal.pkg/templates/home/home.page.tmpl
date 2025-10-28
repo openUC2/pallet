@@ -25,7 +25,7 @@
           and other information to help you use your machine.
         </p>
 
-        {{if not (hasSuffix ".local" $hostname)}}
+        {{if not (or (hasSuffix ".local" $hostname) (hasSuffix ".ts.net" $hostname))}}
           <article class="message is-warning">
             <div class="message-body">
               Note: you are using the hostname <code>{{$hostname}}</code>, which might not work
