@@ -81,6 +81,12 @@ features:
         - description: Auto-generated NetworkManager connection fragment file
           paths:
             - /run/overlays/generated/etc/NetworkManager/system-connections.d/wlan0-hotspot/40-generated-templated.nmconnection
+  wlan0-autoconnect-off:
+    description: Disable automatic creation of the Wi-Fi hotspot
+    provides:
+      file-exports:
+        - description: Drop-in NetworkManager connection fragment with autoconnect disablement
+          target: overlays/etc/NetworkManager/system-connections.d/wlan0-hotspot/21-connection-autoconnect-off.nmconnection
   wlan0-localization:
     description: Set Wi-Fi localization settings for maximum international compatibility
     provides:
@@ -162,6 +168,12 @@ features:
         - description: Auto-generated NetworkManager connection fragment file
           paths:
             - /run/overlays/generated/etc/NetworkManager/system-connections.d/wlan1-hotspot/40-generated-templated.nmconnection
+  wlan1-autoconnect-off:
+    description: Disable automatic creation of the Wi-Fi hotspot
+    provides:
+      file-exports:
+        - description: Drop-in NetworkManager connection fragment with autoconnect disablement
+          target: overlays/etc/NetworkManager/system-connections.d/wlan1-hotspot/21-connection-autoconnect-off.nmconnection
   wlan1-localization:
     description: Set Wi-Fi localization settings for maximum international compatibility
     provides:
