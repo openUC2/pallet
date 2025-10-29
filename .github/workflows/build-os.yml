@@ -42,16 +42,6 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Free disk space
-        uses: jlumbroso/free-disk-space@v1.3.1
-        with:
-          android: true
-          dotnet: true
-          haskell: true
-          large-packages: true
-          docker-images: false
-          swap-storage: true
-
       # GET BASE IMAGE
 
       - name: Determine Raspberry Pi OS base image URL
@@ -103,7 +93,7 @@ jobs:
         with:
           image: ${{ steps.download-base.outputs.destination }}
           mode: to
-          size: 16G
+          size: 20G
 
       # PRE-CACHE CONTAINER IMAGES
       # Because Docker Hub rate-limits container image pulls and we want to pull the same set of
