@@ -9,6 +9,8 @@ Raspberry Pi computers in the OS.
 
 ## Usage
 
+### For developers
+
 Once you've booted into the OS, from a terminal (either the Cockpit terminal or an SSH remote
 session) you can run the following command to upgrade the local pallet to the latest commit on the
 main branch:
@@ -18,8 +20,8 @@ forklift plt upgrade
 ```
 
 If it gives you a warning that you may have changes in your local pallet which have not been
-committed/pushed up to GitHub, and you won't lose any important changes by wiping your local pallet,
-then you should run:
+committed/pushed up to GitHub, but you're sure that you won't lose any important changes by wiping
+your local pallet, then you should run:
 
 ```
 forklift plt upgrade --force
