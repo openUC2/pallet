@@ -1,0 +1,295 @@
+name: build-os
+on:
+  workflow_call:
+    inputs:
+      name:
+        description: 'The name of the OS image to build'
+        required: true
+        type: string
+      base_release_name:
+        description: 'The release name of the RPi OS base image (bullseye, bookworm)'
+        required: true
+        type: string
+      base_image_variant:
+        description: 'The name of the RPi OS base image variant (lite, desktop, or full)'
+        required: true
+        type: string
+      base_release_date:
+        description: 'The release date of the RPi OS base image'
+        required: true
+        type: string
+      base_file_release_date:
+        description: 'The release date of the RPi OS base image file, if different from the group release date'
+        required: false
+        type: string
+      arch:
+        description: 'The CPU architecture of the OS (armhf, arm64)'
+        required: true
+        type: string
+
+jobs:
+  build-os-image:
+    name: Build image
+    runs-on: ubuntu-24.04-arm
+    env:
+      SETUP_USER: pi
+    permissions:
+      contents: read
+      packages: write
+      id-token: write
+    timeout-minutes: 30
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # GET BASE IMAGE
+
+      - name: Determine Raspberry Pi OS base image URL
+        id: rpi-os-image
+        run: |
+          case '${{ inputs.base_release_name }}' in
+            'bookworm')
+              IMAGE_RELEASE_CHANNEL='raspios'
+              ;;
+            'bullseye')
+              IMAGE_RELEASE_CHANNEL='raspios_oldstable'
+              ;;
+            *)
+              echo "Unknown release name: ${{ inputs.base_release_name }}"
+              exit 1
+              ;;
+          esac
+          IMAGE_REPO_GROUP="$IMAGE_RELEASE_CHANNEL"
+          if [[ "${{ inputs.base_image_variant }}" != "desktop" ]]; then
+            IMAGE_REPO_GROUP="${IMAGE_REPO_GROUP}_${{ inputs.base_image_variant }}"
+          fi
+          IMAGE_REPO_GROUP="${IMAGE_REPO_GROUP}_${{ inputs.arch }}"
+          if [[ -z "${{ inputs.base_file_release_date }}" ]]; then
+            BASE_FILE_RELEASE_DATE="${{ inputs.base_release_date }}"
+          else
+            BASE_FILE_RELEASE_DATE="${{ inputs.base_file_release_date }}"
+          fi
+          IMAGE_FILENAME="$BASE_FILE_RELEASE_DATE-raspios-${{ inputs.base_release_name }}-${{ inputs.arch }}"
+          if [[ "${{ inputs.base_image_variant }}" != "desktop" ]]; then
+            IMAGE_FILENAME="${IMAGE_FILENAME}-${{ inputs.base_image_variant }}"
+          fi
+          IMAGE_FILENAME="${IMAGE_FILENAME}.img.xz"
+          IMAGE_URL="https://downloads.raspberrypi.com/$IMAGE_REPO_GROUP/images/$IMAGE_REPO_GROUP-${{ inputs.base_release_date }}/$IMAGE_FILENAME"
+          echo "RPi OS image filename: $IMAGE_FILENAME"
+          echo "image_filename=$IMAGE_FILENAME" >> $GITHUB_OUTPUT
+          echo "RPi OS image URL: $IMAGE_URL"
+          echo "image_url=$IMAGE_URL" >> $GITHUB_OUTPUT
+
+      - name: Download and cache base image
+        id: download-base
+        uses: ethanjli/cached-download-action@v0.1.2
+        with:
+          url: ${{ steps.rpi-os-image.outputs.image_url }}
+          destination: /tmp/${{ steps.rpi-os-image.outputs.image_filename }}
+
+      - name: Decompress & grow base image
+        id: expand-image
+        uses: ethanjli/pigrow-action@v0.1.1
+        with:
+          image: ${{ steps.download-base.outputs.destination }}
+          mode: to
+          size: 20G
+
+      # PRE-CACHE CONTAINER IMAGES
+      # Because Docker Hub rate-limits container image pulls and we want to pull the same set of
+      # images many times for matrix checks, we pre-cache container images so that they can be
+      # reused across workflow runs.
+      # TODO: move some of this into a separate GitHub Action and/or Forklift command, to keep
+      # this workflow simpler
+
+      - name: Set up container image pre-caching
+        id: setup-precaching
+        run: |
+          forklift_setup_root="./os-build/forklift"
+          "$forklift_setup_root/download-forklift.sh" "/usr/bin"
+
+          mkdir -p /tmp/forklift/container-image-precache
+          echo "path=/tmp/forklift/container-image-precache" >> $GITHUB_OUTPUT
+          container_list_hash="$(forklift dev plt ls-img | sha256sum | cut -d ' ' -f 1)"
+          echo "container_list_hash=$container_list_hash" >> $GITHUB_OUTPUT
+
+      - name: Try to load container image pre-cache from GitHub Actions cache
+        id: restore-precache
+        uses: actions/cache/restore@v4
+        with:
+          key: "container-images-${{ matrix.platform.arch }}-${{ steps.setup-precaching.outputs.container_list_hash }}"
+          path: ${{ steps.setup-precaching.outputs.path }}
+
+      - name: Pre-download container images
+        env:
+          ARCH: ${{ inputs.arch }}
+          PRECACHE_PATH: ${{ steps.setup-precaching.outputs.path }}
+        run: |
+          set -x
+          if [ -f "$PRECACHE_PATH/images-list" ]; then
+            echo "Pre-downloaded container images can be loaded from the GitHub Actions cache!"
+            exit 0
+          fi
+          forklift dev plt ls-img > "$PRECACHE_PATH/images-list"
+          forklift_setup_root="./os-build/forklift"
+
+          echo "Downloading temporary tools to pre-download container images..."
+          tmp_bin="$(mktemp -d --tmpdir=/tmp bin.XXXXXXX)"
+          "$forklift_setup_root/download-crane.sh" "$tmp_bin"
+          "$forklift_setup_root/download-rush.sh" "$tmp_bin"
+
+          echo "Pre-downloading container images..."
+          export PATH="$tmp_bin:$PATH"
+          container_platform="linux/$(echo "$ARCH" | sed -e 's~armhf~arm/v7~' -e 's~aarch64~arm64~')"
+          rush "$forklift_setup_root/precache-image.sh" {} "$PRECACHE_PATH" "$container_platform" \
+            < "$PRECACHE_PATH/images-list"
+
+      - name: Save container image pre-cache to GitHub Actions cache
+        if: "!steps.restore-precache.outputs.cache-hit"
+        uses: actions/cache/save@v4
+        with:
+          key: "container-images-${{ matrix.platform.arch }}-${{ steps.setup-precaching.outputs.container_list_hash }}"
+          path: ${{ steps.setup-precaching.outputs.path }}
+
+      # Note: the following step isn't strictly necessary, but it's nice to separate the GitHub
+      # Actions log outputs for setting up pinspawn-action for the first time from the logs for
+      # pre-downloading container images
+      - name: Install pinspawn-action dependencies
+        uses: ethanjli/pinspawn-action@v0.1.5
+        with:
+          image: ${{ steps.expand-image.outputs.destination }}
+          run: echo "Done!"
+
+      - name: Copy pre-downloaded container images into OS image
+        uses: ethanjli/pinspawn-action@v0.1.5
+        with:
+          image: ${{ steps.expand-image.outputs.destination }}
+          user: ${{ env.SETUP_USER }}
+          args: >-
+            --bind ${{ steps.setup-precaching.outputs.path }}:/run/container-images
+            --machine=raspberrypi
+          run: |
+            local_cache="$HOME/.cache/forklift/containers/docker-archives"
+            mkdir -p "$local_cache"
+            sudo cp -r /run/container-images/* "$local_cache"
+            sudo chown $USER -R "$local_cache"
+
+      # RUN OS SETUP SCRIPTS
+
+      - name: Download and cache Hik Driver
+        id: download-hik-driver
+        uses: ethanjli/cached-download-action@v0.1.2
+        with:
+          url: https://www.hikrobotics.com/en2/source/vision/video/2024/9/3/MVS_STD_V3.0.1_240902.zip
+          destination: /tmp/MVS_STD_V3.0.1_240902.zip
+
+      # Note: the following step isn't strictly necessary, but it's nice to separate the GitHub
+      # Actions log outputs for setting up pinspawn-action for the first time from the logs for
+      # the OS installation script
+      - name: Install pinspawn-action dependencies
+        uses: ethanjli/pinspawn-action@v0.1.4
+        with:
+          image: ${{ steps.expand-image.outputs.destination }}
+          run: echo "Done!"
+
+      - name: Run OS setup scripts in an unbooted container
+        uses: ethanjli/pinspawn-action@v0.1.4
+        with:
+          image: ${{ steps.expand-image.outputs.destination }}
+          user: ${{ env.SETUP_USER }}
+          # Note: CAP_NET_ADMIN is needed for iptables, which is needed for Docker (at least in an
+          # unbooted container). Setting the machine ID (and therefore hostname) to `raspberrypi`
+          # resolves noisy (but harmless) error messages from sudo.
+          args: >-
+            --bind "$(pwd)/os-build":/run/os-build
+            --bind "$(pwd)":/run/pallet
+            --bind ${{ steps.download-hik-driver.outputs.destination }}:${{ steps.download-hik-driver.outputs.destination }}
+            --capability=CAP_NET_ADMIN
+            --machine=raspberrypi
+          run: |
+            echo "Provisioning local pallet..."
+            mkdir -p /home/pi/.local/share/forklift
+            cp -r /run/pallet /home/pi/.local/share/forklift/pallet
+            echo "Running setup scripts..."
+            export DEBIAN_FRONTEND=noninteractive
+            /run/os-build/setup.sh
+            echo "Done!"
+
+      - name: Prepare for a headless first boot on bare metal
+        uses: ethanjli/pinspawn-action@v0.1.4
+        env:
+          DEFAULT_PASSWORD: youseetoo
+          DEFAULT_KEYBOARD_LAYOUT: de
+        with:
+          image: ${{ steps.expand-image.outputs.destination }}
+          args: --machine=raspberrypi
+          run: |
+            # Change default settings for the SD card to enable headless & keyboardless first boot
+            # Note: we could change the username by making a `/boot/userconf.txt` file with the new
+            # username and an encrypted representation of the password (and un-disabling and
+            # unmasking `userconfig.service`), but we don't need to do that for now.
+            # See https://github.com/RPi-Distro/userconf-pi/blob/bookworm/userconf-service and
+            # https://www.raspberrypi.com/documentation/computers/configuration.html#configuring-a-user
+            # and the "firstrun"-related and "cloudinit"-related lines of
+            # https://github.com/raspberrypi/rpi-imager/blob/qml/src/OptionsPopup.qml and
+            # the RPi SD card image's `/usr/lib/raspberrypi-sys-mods/firstboot` and
+            # `/usr/lib/raspberrypi-sys-mods/imager_custom` scripts
+            echo "pi:${{ env.DEFAULT_PASSWORD }}" | chpasswd
+            sed -i \
+              -e "s~^XKBLAYOUT=.*~XKBLAYOUT=\"${{ env.DEFAULT_KEYBOARD_LAYOUT }}\"~" \
+              /etc/default/keyboard
+            systemctl disable userconfig.service
+
+            # This is needed to have the login prompt on tty1 (so that a user with a keyboard can
+            # log in without switching away from the default tty), because we disabled
+            # userconfig.service. See
+            # https://forums.raspberrypi.com/viewtopic.php?p=2032694#p2032694
+            systemctl enable getty@tty1
+
+      # UPLOAD OS IMAGE
+
+      # TODO: save this to a file in the SD card image
+      # TODO: use forklift to determine the version/pseudoversion string; if it's a PR, append that
+      # only as a semver build tag
+      - name: Determine output image name
+        env:
+          TAG_PREFIX: "v"
+        run: |
+          # Determine the version for the image name
+          if [[ -n "${{ github.event.pull_request.head.sha }}" ]]; then
+            # We're in a pull request
+            version="$(\
+              printf "pr-%s-%.7s" \
+                "${{ github.event.pull_request.number }}" \
+                "${{ github.event.pull_request.head.sha }}" \
+            )"
+          elif [[ "${{ github.ref_type }}" == "tag" && "${{ github.ref }}" == refs/tags/$TAG_PREFIX* ]]; then
+            version="${{ github.ref }}"
+            version="v${version#"refs/tags/$TAG_PREFIX"}"
+          else
+            version="$(printf "%.7s" "${{ github.sha }}")"
+          fi
+
+          # Assemble the image name
+          output_name="${{ inputs.name }}-$version"
+          echo "OUTPUT_IMAGE_NAME=$output_name" >> $GITHUB_ENV
+
+      - name: Shrink the OS image
+        uses: ethanjli/pishrink-action@v0.1.4
+        env:
+          PISHRINK_XZ: -T0 ${{ github.ref_type == 'tag' && '-9' || '-1' }}
+        with:
+          image: ${{ steps.expand-image.outputs.destination }}
+          destination: ${{ env.OUTPUT_IMAGE_NAME }}.img
+          compress: xz
+          compress-parallel: true
+
+      - name: Upload image to Job Artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ env.OUTPUT_IMAGE_NAME }}
+          path: ${{ env.OUTPUT_IMAGE_NAME }}.img.xz
+          if-no-files-found: error
+          retention-days: 0
+          compression-level: 0
+          overwrite: true
