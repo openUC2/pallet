@@ -12,8 +12,8 @@
   {{$machineName := .Data.MachineName}}
 
   <main>
-    <section class="section content">
-      <div class="container is-max-desktop">
+    <div class="container content is-max-desktop">
+      <section class="section">
         <h1>Machine {{$machineName}}</h1>
         <p>
           Welcome! This is the home page for your machine with machine name
@@ -51,11 +51,9 @@
             </div>
           </article>
         {{end}}
-      </div>
-    </section>
+      </section>
 
-    <section class="section content">
-      <div class="container is-max-desktop">
+      <section class="section">
         <h2>Browser applications</h2>
         <ul>
           <li>
@@ -73,11 +71,9 @@
             </article>
           </li>
         </ul>
-      </div>
-    </section>
+      </section>
 
-    <section class="section content is-large">
-      <div class="container is-max-desktop">
+      <section class="section is-large">
         <h2>Need help?</h2>
 
         <h3 class="is-size-5">Wrong machine?</h3>
@@ -202,11 +198,9 @@
             openUC2's GitHub organization for development of the openUC2 optical toolbox
           </li>
         </ul>
-      </div>
-    </section>
+      </section>
 
-    <section class="section content is-large">
-      <div class="container is-max-desktop">
+      <section class="section is-large">
         <h2>For advanced users</h2>
         <h3 class="is-size-5">Browser applications</h3>
         <p>System administration and troubleshooting:</p>
@@ -303,7 +297,7 @@
             programs
           </li>
         </ul>
-      </div>
-    </section>
+      </section>
+    </div>
   </main>
 {{end}}
