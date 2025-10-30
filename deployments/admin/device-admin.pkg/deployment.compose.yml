@@ -1,9 +1,10 @@
 services:
   server:
-    image: ghcr.io/openuc2/device-admin:0.1.1-alpha.7@sha256:ba7c59eb220f298dafe1829e4bb990063a1cda1bbfaf1b6926603a31ebd15952
+    image: ghcr.io/openuc2/device-admin:0.1.1-alpha.8@sha256:97244b048a121a5d477151099b763d2e8d7e8d844ab573502a40027fb751d9a3
     environment:
       - HTTP_BASEPATH=/admin/panel/
       - TEMPLATES_PATH=/web/templates
+      - TAILSCALE_KNOWN_TAILNET=openuc2-gmbh.github
     volumes:
       - type: bind
         source: ./templates
@@ -12,6 +13,9 @@ services:
       - type: bind
         source: /run/dbus/system_bus_socket
         target: /var/run/dbus/system_bus_socket
+      - type: bind
+        source: /run/tailscale/tailscaled.sock
+        target: /run/tailscale/tailscaled.sock
 networks:
   default:
     name: none
