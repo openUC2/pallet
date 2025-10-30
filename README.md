@@ -80,12 +80,13 @@ Now you are ready to deploy these changes as an OS update to your machine runnin
    forklift stage apply
    ```
 
-### Migrating from [openUC2/pallet]
+### Migrating from github.com/openUC2/pallet
 
 The pallet in this repo used to be called `github.com/openUC2/pallet`. On machines deployed with
 older versions of this OS (i.e. versions built by the now-archived
-[openUC2/imswitch-os](https://github.com/openUC2/imswitch-os) repo), you should run the following
-command before running any `forklift plt upgrade` commands:
+[openUC2/imswitch-os](https://github.com/openUC2/imswitch-os) repo, which as a result will look for
+upgrades from `github.com/openUC2/pallet` rather than `github.com/openUC2/rpi-imswitch-os`), you
+should run the following command before running any `forklift plt upgrade` commands:
 
 ```
 forklift plt set-upgrade-query github.com/openUC2/rpi-imswitch-os@main
