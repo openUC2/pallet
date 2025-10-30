@@ -15,7 +15,7 @@ services:
         target: /var/run/dbus/system_bus_socket
       - type: bind
         source: /run/tailscale/tailscaled.sock
-        target: /run/tailscale/tailscaled.sock
+        target: /var/run/tailscale/tailscaled.sock
 networks:
   default:
     name: none
