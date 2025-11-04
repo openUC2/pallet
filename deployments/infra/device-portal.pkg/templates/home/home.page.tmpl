@@ -24,33 +24,6 @@
           documentation for operating your machine,
           and other information to help you use your machine.
         </p>
-
-        {{if not (or (hasSuffix ".local" $hostname) (hasSuffix ".ts.net" $hostname))}}
-          <article class="message is-warning">
-            <div class="message-body">
-              Note: you are using the hostname <code>{{$hostname}}</code>, which might not work
-              outside of direct connections to the machine through its Wi-Fi hotspot or through
-              an Ethernet cable. If/when you want to connect to the machine through a Wi-Fi
-              router or Ethernet router (for example because you have connected your machine to
-              the internet through an external Wi-Fi network, which disables the machine's
-              Wi-Fi hotspot under certain conditions), you may instead need to use
-              <a href="//openuc2-{{$machineName}}.local">openuc2-{{$machineName}}.local</a>
-              to access this machine (though
-              <a href="//openuc2.local">openuc2.local</a>
-              should also work if no other machines are connected to the router).
-            </div>
-          </article>
-        {{else if not (hasPrefix "openuc2-" $hostname)}}
-          <article class="message is-info">
-            <div class="message-body">
-              Note: you are using the hostname <code>{{$hostname}}</code>, which will be ambiguous
-              if/when you are potentially connected (either directly or indirectly) to multiple
-                machine. In such situations, you will instead need to use
-              <a href="//openuc2-{{$machineName}}.local">openuc2-{{$machineName}}.local</a>
-              to access this machine.
-            </div>
-          </article>
-        {{end}}
       </div>
     </section>
 
