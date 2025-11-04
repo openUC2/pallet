@@ -1,10 +1,9 @@
 services:
   server:
-    image: ghcr.io/openuc2/device-admin:0.1.1-alpha.8@sha256:97244b048a121a5d477151099b763d2e8d7e8d844ab573502a40027fb751d9a3
+    image: ghcr.io/openuc2/device-admin:0.1.1@sha256:fdcd4736457a64d337ef87d545fe685ec52c05060241259028580dcf1d763cc6
     environment:
       - HTTP_BASEPATH=/admin/panel/
       - TEMPLATES_PATH=/web/templates
-      - TAILSCALE_KNOWN_TAILNET=openuc2-gmbh.github
     volumes:
       - type: bind
         source: ./templates
