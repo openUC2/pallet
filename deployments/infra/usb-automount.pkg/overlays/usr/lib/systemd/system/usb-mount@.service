@@ -2,8 +2,6 @@
 Description=Mount USB drive on %i
 
 [Service]
-User=pi
-Group=pi
 Type=oneshot
 RemainAfterExit=true
 # This is a workaround for a race condition udev triggers this service before udisksctl is
