@@ -42,11 +42,20 @@ These are usage instructions for developers.
    and then merge the pull request which that action should create. This way, you wouldn't have to
    manually edit any files.
 
-5. Commit and push your changes to this repo.
+5. If you made your edits directly in the local pallet on a machine running ImSwitch OS (i.e. inside
+   `/home/pi/.local/share/forklift/pallet`), before publishing your edits you can test them directly
+   on the device by running:
+
+   ```
+   forklift plt apply
+   ```
+
+6. To publish your edits as an update to be deployed on other machines, commit and push your changes
+   to GitHub.
 
 Now you are ready to deploy these changes as an OS update to your machine running ImSwitch OS.
 
-### Deploying an OS update to your machine
+### Deploying a published OS update to your machine
 
 1. Once you've booted your machine into ImSwitch OS, from a terminal (either the Cockpit terminal or
    an SSH remote session) you can run the following command to upgrade the local pallet to the
