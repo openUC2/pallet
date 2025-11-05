@@ -1,5 +1,4 @@
 package: /deployments/infra/usb-automount.pkg
 features:
-  - shared-mounts
   - noatime
 disabled: false
