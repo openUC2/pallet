@@ -7,15 +7,6 @@ RemainAfterExit=true
 # This is a workaround for a race condition udev triggers this service before udisksctl is
 # actually ready to mount the device; here, we work around it by polling until the device appears
 # in the D-Bus API. Refer to https://github.com/storaged-project/udisks/issues/711 for details.
-ExecStartPre=bash -c '\
-  while true; do\
-    if busctl call org.freedesktop.UDisks2 /org/freedesktop/UDisks2/Manager org.freedesktop.UDisks2.Manager GetBlockDevices a{sv} 1 "auth.no_user_interaction" b TRUE | grep "/org/freedesktop/UDisks2/block_devices/%i" ; then
-      echo "UDisks2 is ready to mount block device %i!"
-      break
-    fi
-    echo "Waiting for UDisks2 to finish identifying block device %i..."
-    sleep 1
-  done
-'
+ExecStartPre=/usr/libexec/wait-udisks-device "%i"
 ExecStart=udisksctl mount --no-user-interaction --block-device /dev/%i
 ExecStop=udisksctl unmount --no-user-interaction --block-device /dev/%i

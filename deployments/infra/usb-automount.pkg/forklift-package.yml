@@ -10,6 +10,8 @@ package:
 deployment:
   provides:
     file-exports:
+      - description: shell script to sleep until a block device is available for management by UDisks2
+        target: overlays/usr/libexec/wait-udisks-device
       - description: systemd service template to mount a USB drive
         target: overlays/usr/lib/systemd/system/usb-mount@.service
       - description: udev rules to run the systemd service to mount a USB drive upon being plugged in
