@@ -8,7 +8,7 @@ package:
     # Forklift-deployed software (MIT):
     - https://github.com/openUC2/device-portal
     # Templates (Apache-2.0):
-    - https://github.com/openUC2/pallet
+    - https://github.com/openUC2/rpi-imswitch-os
 
 deployment:
   compose-files:
