@@ -13,5 +13,5 @@ while true; do
     break
   fi
   echo "Waiting for UDisks2 to finish identifying block device $device..."
-  sleep 1
+  sleep 5
 done
