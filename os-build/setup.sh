@@ -43,7 +43,6 @@ report_starting "$description"
 # /run/os-setup/setup.sh: line 43: /run/os-setup/localization/config.sh: Permission denied
 # make sure to run chmod +x /run/os-setup/localization/config.sh
 if "$build_scripts_root"/localization/config.sh; then
-  source "$build_scripts_root"/localization/export-env.sh
   report_finished "$description"
 else
   panic "$description"
@@ -68,22 +67,6 @@ fi
 description="install ImSwitch"
 report_starting "$description"
 if "$build_scripts_root"/imswitch/install.sh; then
-  report_finished "$description"
-else
-  panic "$description"
-fi
-
-description="Fix Permission Network Manager"
-report_starting "$description"
-if "$build_scripts_root"/imswitch/fixpermissionnmcli.sh; then
-  report_finished "$description"
-else
-  panic "$description"
-fi
-
-description="Fix Permission Firewall"
-report_starting "$description"
-if "$build_scripts_root"/imswitch/fixpermissionfirewall.sh; then
   report_finished "$description"
 else
   panic "$description"

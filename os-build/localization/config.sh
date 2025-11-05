@@ -6,7 +6,7 @@
 # of /usr/share/i18n/SUPPORTED for a list of locales which can be generated.
 sudo bash -c 'cat > /etc/locale.gen' <<EOT
 en_US.UTF-8 UTF-8
-en_DK.UTF-8 UTF-8
+de_DE.UTF-8 UTF-8
 EOT
 sudo dpkg-reconfigure --frontend=noninteractive locales
 # Note: https://wiki.debian.org/Locale#Standard recommends choosing "None" as the default locale to
