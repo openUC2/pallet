@@ -1,10 +1,7 @@
 #!/bin/bash -eux
 # Optional: Install filesystem packages for NTFS/exFAT
-sudo apt install -y ntfs-3g exfat-fuse exfatprogs
-
-# Remove older custom rules if they exist
-sudo rm -f /etc/udev/rules.d/99-usb-mount.rules 2>/dev/null || true
-sudo rm -f /etc/udev/rules.d/99-auto-udisks2.rules 2>/dev/null || true
+sudo apt install -y -o DPkg::Lock::Timeout=60 -o Dpkg::Progress-Fancy=0 \
+  ntfs-3g exfat-fuse exfatprogs exfat-utils
 
 # Create the mount script
 sudo tee /usr/local/bin/automount.sh >/dev/null <<'EOF'

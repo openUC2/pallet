@@ -98,13 +98,13 @@ else
   panic "$description"
 fi
 
-description="set up USB automount"
-report_starting "$description"
-if "$build_scripts_root"/usb-automount/install.sh; then
-  report_finished "$description"
-else
-  panic "$description"
-fi
+# description="set up USB automount"
+# report_starting "$description"
+# if "$build_scripts_root"/usb-automount/install.sh; then
+#   report_finished "$description"
+# else
+#   panic "$description"
+# fi
 
 description="set up rootfs initialization during boot"
 report_starting "$description"
