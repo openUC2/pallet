@@ -4,7 +4,7 @@ This is the standard operating system used on Raspberry Pi computers in openUC2 
 "ImSwitch OS".
 
 This repo is both the [Forklift](https://github.com/PlanktoScope/forklift) pallet for the OS, and
-the automated build system for creating OS images which can be flasshed onto SD cards for booting
+the automated build system for creating OS images which can be flashed onto SD cards for booting
 Raspberry Pi computers in the OS.
 
 ## Usage
@@ -26,10 +26,11 @@ These are usage instructions for developers.
 
 4. In this repo, manually edit the
    [deployments/imswitch.pkg/compose.yml](./deployments/imswitch.pkg/compose.yml)
-   file's `services.imswitch-noqt.image` value, which should be of format
-   `ghcr.io/openuc2/imswitch-noqt:{something}`, to replace `{something}` (which may look like
-   `sha-0c335c4` or like `sha-0c335c4@sha256:{a very long hash}`) with the tagged image version
-   (e.g. `sha:0c335c4`). The result should look something like:
+   file's `services.imswitch-noqt.image` value.
+
+   It should be of format `ghcr.io/openuc2/imswitch-noqt:{something}`, and you should replace the
+   `{something}` (which may look like `sha-0c335c4` or like `sha-0c335c4@sha256:{a very long hash}`)
+   with the tagged image version (e.g. `sha:0c335c4`). The result should look something like:
 
    ```
    image: ghcr.io/openuc2/imswitch-noqt:sha-0c335c4
@@ -92,19 +93,20 @@ Now you are ready to deploy these changes as an OS update to your machine runnin
 ### Migrating from github.com/openUC2/pallet
 
 The pallet in this repo used to be called `github.com/openUC2/pallet`. On machines deployed with
-older versions of this OS (i.e. versions built by the now-archived
-[openUC2/imswitch-os](https://github.com/openUC2/imswitch-os) repo, which as a result will look for
-upgrades from `github.com/openUC2/pallet` rather than `github.com/openUC2/rpi-imswitch-os`), you
-should run the following command before running any `forklift plt upgrade` commands:
+older versions of this OS built before November 2025 (i.e. versions of the OS built by the
+now-archived [openUC2/imswitch-os](https://github.com/openUC2/imswitch-os) repo), you
+will need to run the following command (instead of `forklift plt upgrade`) for your next upgrade:
 
 ```
-forklift plt set-upgrade-query github.com/openUC2/rpi-imswitch-os@main
+forklift plt switch github.com/openUC2/rpi-imswitch-os@main
 ```
 
-Then, your next OS upgrade will need to be done using the following command:
+If it gives you a warning that you may have changes in your local pallet which have not been
+committed/pushed up to GitHub, but you're sure that you won't lose any important changes by
+wiping your local pallet, then you should run:
 
 ```
-forklift plt upgrade --allow-downgrade --force
+forklift plt switch --force github.com/openUC2/rpi-imswitch-os@main
 ```
 
 ## Licensing
