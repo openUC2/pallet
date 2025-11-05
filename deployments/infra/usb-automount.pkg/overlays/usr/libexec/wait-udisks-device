@@ -3,11 +3,12 @@
 device="$1"
 
 while true; do
-  if busctl call \
+  block_devices="$(busctl call \
     org.freedesktop.UDisks2 /org/freedesktop/UDisks2/Manager \
     org.freedesktop.UDisks2.Manager GetBlockDevices \
     a{sv} 1 "auth.no_user_interaction" b TRUE |
-    grep "/org/freedesktop/UDisks2/block_devices/$device"; then
+    tr " " "\n" | tail -n +3 | sed -e 's~^"~~' -e 's~"$~~' | sort)"
+  if grep "/org/freedesktop/UDisks2/block_devices/$device" <<<"$block_devices"; then
     echo "UDisks2 is ready to mount block device $device!"
     break
   fi

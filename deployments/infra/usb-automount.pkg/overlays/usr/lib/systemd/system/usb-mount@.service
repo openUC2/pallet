@@ -4,6 +4,8 @@ Description=Mount USB drive on %i
 [Service]
 Type=oneshot
 RemainAfterExit=true
+User=pi
+Group=pi
 # This is a workaround for a race condition udev triggers this service before udisksctl is
 # actually ready to mount the device; here, we work around it by polling until the device appears
 # in the D-Bus API. Refer to https://github.com/storaged-project/udisks/issues/711 for details.
