@@ -4,5 +4,10 @@ Description=Mount USB drive on %i
 [Service]
 Type=oneshot
 RemainAfterExit=true
+ExecStartPre=udevadm settle
+# FIXME: there's a possible race condition where `udevadm settle` finishes before udisksctl is
+# actually ready to mount the device; for now, we work around it by sleeping briefly. Refer to
+# https://github.com/storaged-project/udisks/issues/711 for details.
+ExecStartPre=sleep 2
 ExecStart=udisksctl mount --no-user-interaction --block-device /dev/%i
 ExecStop=udisksctl unmount --no-user-interaction --block-device /dev/%i
