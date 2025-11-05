@@ -1,0 +1,32 @@
+package:
+  description: Automatically mounts USB devices when they're attached
+  maintainers:
+    - name: Ethan Li
+      email: lietk12@gmail.com
+  license: Apache-2.0
+  sources:
+    - https://github.com/openUC2/rpi-imswitch-os
+
+deployment:
+  provides:
+    file-exports:
+      - description: systemd service template to mount a USB drive
+        target: overlays/usr/lib/systemd/system/usb-mount@.service
+      - description: udev rules to run the systemd service to mount a USB drive upon being plugged in
+        target: overlays/usr/lib/udev/rules.d/99-usb-automount.rules
+
+features:
+  shared-mounts:
+    description: mount drives to `/media` instead of `/run/media/$USER`
+    provides:
+      file-exports:
+        - description: udev rules to run the systemd service to mount a USB drive upon being plugged in
+          target: overlays/usr/lib/udev/rules.d/99-udisks2.rules
+        - description: systemd-tmpfiles config to clean stale mountpoints at every boot
+          target: overlays/usr/lib/tmpfiles.d/media.conf
+  noatime:
+    description: prolong flash memory lifetime by not updating file access times
+    provides:
+      file-exports:
+        - description: udisks2 config to set noatime as default
+          target: overlays/etc/udisks2/mount_options.conf

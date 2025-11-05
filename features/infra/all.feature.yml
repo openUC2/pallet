@@ -4,3 +4,7 @@ modifiers:
     source: base/containers
   - type: add-feature
     source: base/http
+  - type: add-feature
+    source: base/identity
+  - type: add-feature
+    source: base/storage

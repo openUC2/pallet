@@ -1,0 +1,8 @@
+[Unit]
+Description=Mount USB drive on %i
+
+[Service]
+Type=oneshot
+RemainAfterExit=true
+ExecStart=udisksctl mount --no-user-interaction --block-device /dev/%i
+ExecStop=udisksctl unmount --no-user-interaction --block-device /dev/%i
