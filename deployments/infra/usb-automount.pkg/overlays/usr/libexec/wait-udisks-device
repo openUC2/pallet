@@ -2,16 +2,13 @@
 
 device="$1"
 
-echo "Waiting for queued udev device events to finish being processed (this might take a while!)..."
-udevadm settle
-
 while true; do
   block_devices="$(busctl call \
     org.freedesktop.UDisks2 /org/freedesktop/UDisks2/Manager \
     org.freedesktop.UDisks2.Manager GetBlockDevices \
     a{sv} 1 "auth.no_user_interaction" b TRUE |
     tr " " "\n" | tail -n +3 | sed -e 's~^"~~' -e 's~"$~~' | sort)"
-  if grep "/org/freedesktop/UDisks2/block_devices/$device" <<<"$block_devices"; then
+  if grep "^/org/freedesktop/UDisks2/block_devices/$device$" <<<"$block_devices"; then
     echo "UDisks2 is ready to mount block device $device!"
     break
   fi
