@@ -6,21 +6,19 @@ services:
       - "8001:8001" # frontend, HTTP API, WebSockets API
       - "8888:8888" # Jupyter
     volumes:
+      - /etc/machine-id:/etc/machine-id:ro
       - /home/pi/ImSwitchConfig:/config
       - /home/pi/Datasets:/datasets
       - /media:/media
-      - /run/dbus/system_bus_socket:/run/dbus/system_bus_socket
-      - /etc/machine-id:/etc/machine-id:ro
     environment:
       - HEADLESS=1
       - HTTP_PORT=8001
+      - CONFIG_PATH=/config
       - CONFIG_FILE=example_virtual_microscope.json
       - UPDATE_GIT=0
       - UPDATE_CONFIG=0
       - DATA_PATH=/datasets
-      - CONFIG_PATH=/config
-      - SCAN_EXT_DATA_FOLDER=1
+      - SCAN_EXT_DRIVE_MOUNT=1 # parsed by entrypoint.sh, which ignores SCAN_EXT_DATA_FOLDER
       - EXT_DRIVE_MOUNT=/media/pi
       - SSL=0
-      - scan-ext-drive-mount=true
     restart: always
