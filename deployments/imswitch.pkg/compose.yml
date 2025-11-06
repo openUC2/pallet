@@ -19,7 +19,7 @@ services:
       - UPDATE_CONFIG=0
       - DATA_PATH=/datasets
       - SCAN_EXT_DRIVE_MOUNT=1 # parsed by entrypoint.sh, which ignores SCAN_EXT_DATA_FOLDER
-      - EXT_DRIVE_MOUNT=/media/pi
+      - EXT_DRIVE_MOUNT=/media
       - SSL=0
     restart: always
   volume-setup:

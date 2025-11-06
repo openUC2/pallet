@@ -30,3 +30,15 @@ features:
       file-exports:
         - description: udisks2 config to set noatime as default
           target: overlays/etc/udisks2/mount_options.conf
+  shared-mounts:
+    description: mount drives directly to `/media` instead of `/media/$USER`
+    provides:
+      file-exports:
+        - description: udev rules to run the systemd service to mount a USB drive upon being plugged in
+          target: overlays/usr/lib/udev/rules.d/98-udisks2-mounts.rules
+  mount-cleanup:
+    description: clean stale mountpoints at every boot
+    provides:
+      file-exports:
+        - description: systemd-tmpfiles config to clean stale mountpoints at every boot
+          target: overlays/usr/lib/tmpfiles.d/media.conf
