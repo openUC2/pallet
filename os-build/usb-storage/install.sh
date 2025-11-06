@@ -1,7 +1,7 @@
 #!/bin/bash -eux
 sudo apt install -y -o DPkg::Lock::Timeout=60 -o Dpkg::Progress-Fancy=0 \
   udisks2 udisks2-lvm2 \
-  exfat-fuse exfatprogs exfat-utils \
+  exfat-fuse exfatprogs \
   ntfs-3g
 
 sudo groupadd storage
