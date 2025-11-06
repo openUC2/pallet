@@ -1,0 +1,11 @@
+[Unit]
+Description=Trigger udev add events for all devices
+After=overlay-fs.target
+
+[Service]
+Type=oneshot
+ExecStart=udevadm control --reload
+ExecStart=udevadm trigger --action=add --verbose
+
+[Install]
+WantedBy=overlay-fs.target

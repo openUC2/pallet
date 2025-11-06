@@ -16,6 +16,10 @@ deployment:
         target: overlays/usr/lib/systemd/system/usb-mount@.service
       - description: udev rules to run the systemd service to mount a USB drive upon being plugged in
         target: overlays/usr/lib/udev/rules.d/99-usb-automount.rules
+      - description: systemd service to trigger automount USB drives already plugged in during boot
+        target: overlays/usr/lib/systemd/system/udev-readd.service
+      - description: systemd service enablement for udev-readd.service
+        target: overlays/etc/systemd/system/overlay-fs.target.wants/udev-readd.service
 
 features:
   noatime:
