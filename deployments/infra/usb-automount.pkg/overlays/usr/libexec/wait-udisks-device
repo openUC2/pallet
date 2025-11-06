@@ -2,6 +2,9 @@
 
 device="$1"
 
+echo "Waiting for queued udev device events to finish being processed (this might take a while!)..."
+udevadm settle
+
 while true; do
   block_devices="$(busctl call \
     org.freedesktop.UDisks2 /org/freedesktop/UDisks2/Manager \
@@ -13,5 +16,5 @@ while true; do
     break
   fi
   echo "Waiting for UDisks2 to finish identifying block device $device..."
-  sleep 5
+  sleep 1
 done
