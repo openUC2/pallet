@@ -4,7 +4,7 @@ Description=Trigger udev add events for all devices
 [Service]
 Type=oneshot
 ExecStart=udevadm control --reload
-ExecStart=udevadm trigger --action=add --verbose
+ExecStart=udevadm trigger --action=add
 
 [Install]
 WantedBy=multi-user.target
