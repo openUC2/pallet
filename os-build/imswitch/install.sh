@@ -4,6 +4,7 @@ config_files_root=$(dirname "$(realpath "$BASH_SOURCE")")
 
 mkdir -p ~/Downloads
 mkdir -p ~/Desktop
+mkdir -p ~/Datasets
 
 cd ~/Downloads
 
