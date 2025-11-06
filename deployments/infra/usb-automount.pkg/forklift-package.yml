@@ -19,7 +19,7 @@ deployment:
       - description: systemd service to trigger automount USB drives already plugged in during boot
         target: overlays/usr/lib/systemd/system/udev-readd.service
       - description: systemd service enablement for udev-readd.service
-        target: overlays/etc/systemd/system/overlay-fs.target.wants/udev-readd.service
+        target: overlays/etc/systemd/system/multi-user.target.wants/udev-readd.service
 
 features:
   noatime:
