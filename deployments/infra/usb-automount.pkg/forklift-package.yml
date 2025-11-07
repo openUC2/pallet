@@ -1,0 +1,44 @@
+package:
+  description: Automatically mounts USB devices when they're attached
+  maintainers:
+    - name: Ethan Li
+      email: lietk12@gmail.com
+  license: Apache-2.0
+  sources:
+    - https://github.com/openUC2/rpi-imswitch-os
+
+deployment:
+  provides:
+    file-exports:
+      - description: shell script to sleep until a block device is available for management by UDisks2
+        target: overlays/usr/libexec/wait-udisks-device
+      - description: systemd service template to mount a USB drive
+        target: overlays/usr/lib/systemd/system/usb-mount@.service
+      - description: udev rules to run the systemd service to mount a USB drive upon being plugged in
+        target: overlays/usr/lib/udev/rules.d/99-usb-automount.rules
+      - description: systemd service to trigger automount USB drives already plugged in during boot
+        target: overlays/usr/lib/systemd/system/udev-readd.service
+      - description: systemd service enablement for udev-readd.service
+        target: overlays/etc/systemd/system/multi-user.target.wants/udev-readd.service
+      - description: polkit rules for using UDisks2 to mount drives as users in `storage` group
+        target: overlays/etc/polkit-1/rules.d/50-usb-automount.rules
+
+features:
+  noatime:
+    description: prolong flash memory lifetime by not updating file access times
+    provides:
+      file-exports:
+        - description: udisks2 config to set noatime as default
+          target: overlays/etc/udisks2/mount_options.conf
+  shared-mounts:
+    description: mount drives directly to `/media` instead of `/media/$USER`
+    provides:
+      file-exports:
+        - description: udev rules to run the systemd service to mount a USB drive upon being plugged in
+          target: overlays/usr/lib/udev/rules.d/98-udisks2-mounts.rules
+  mount-cleanup:
+    description: clean stale mountpoints at every boot
+    provides:
+      file-exports:
+        - description: systemd-tmpfiles config to clean stale mountpoints at every boot
+          target: overlays/usr/lib/tmpfiles.d/media.conf

@@ -1,6 +1,8 @@
-description: All PlanktoScope-specific apps
+description: All apps only useful for ImSwitch OS
 modifiers:
   - type: add-feature
-    source: planktoscope/backends/all
+    source: openuc2/files
   - type: add-feature
-    source: planktoscope/frontends/all
+    source: openuc2/dashboards
+  - type: add-feature
+    source: openuc2/help

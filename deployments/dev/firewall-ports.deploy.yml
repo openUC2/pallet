@@ -1,0 +1,5 @@
+package: /deployments/dev/firewall-ports.pkg
+features:
+  - firewall-allow-direct
+  - firewall-allow-public
+disabled: true

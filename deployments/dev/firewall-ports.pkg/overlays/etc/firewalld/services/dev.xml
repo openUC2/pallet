@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<service>
+  <port port="3000" protocol="tcp" />
+  <port port="3001" protocol="tcp" />
+  <port port="3002" protocol="tcp" />
+  <port port="3003" protocol="tcp" />
+</service>

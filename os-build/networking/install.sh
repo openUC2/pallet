@@ -10,13 +10,6 @@ sudo -E apt-get install -y -o Dpkg::Progress-Fancy=0 \
   network-manager firewalld dnsmasq-base
 sudo systemctl enable NetworkManager.service
 
-# Uninstall dhcpcd if we're on bullseye
-DISTRO_VERSION_ID="$(. /etc/os-release && echo "$VERSION_ID")"
-if [ "$DISTRO_VERSION_ID" -le 11 ]; then # Support Raspberry Pi OS 11 (bullseye)
-  sudo -E apt-get purge -y -o Dpkg::Progress-Fancy=0 \
-    dhcpcd5
-fi
-
 # Set the wifi country
 # FIXME: instead have the user set the wifi country via a first-launch setup wizard, and do it
 # without using raspi-config. It should also be updated if the user changes the wifi country.
@@ -35,6 +28,6 @@ curl -fsSL "https://pkgs.tailscale.com/stable/raspbian/$DISTRO_VERSION_CODENAME.
   sudo tee /usr/share/keyrings/tailscale-archive-keyring.gpg >/dev/null
 curl -fsSL "https://pkgs.tailscale.com/stable/raspbian/$DISTRO_VERSION_CODENAME.tailscale-keyring.list" |
   sudo tee /etc/apt/sources.list.d/tailscale.list
-sudo -E apt-get update -y -o Dpkg::Progress-Fancy=0 # get the list of packages from the docker repo
+sudo -E apt-get update -y -o Dpkg::Progress-Fancy=0
 sudo -E apt-get install -y -o Dpkg::Progress-Fancy=0 \
   tailscale

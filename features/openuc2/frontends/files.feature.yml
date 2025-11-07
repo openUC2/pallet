@@ -1,8 +1,0 @@
-description: PlanktoScope-specific file-browsing apps
-modifiers:
-  - type: add-feature
-    source: base/http
-  - target: /packages/core/apps/planktoscope/filebrowser-backend-logs
-  - target: /deployments/apps/ps/files-logs.deploy.yml
-  - target: /packages/core/apps/planktoscope/filebrowser-datasets
-  - target: /deployments/apps/ps/files-datasets.deploy.yml

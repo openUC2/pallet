@@ -14,7 +14,7 @@ echo \
   "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg]" \
   "https://download.docker.com/linux/debian $DISTRO_VERSION_CODENAME stable" |
   sudo tee /etc/apt/sources.list.d/docker.list >/dev/null
-sudo -E apt-get update -y -o Dpkg::Progress-Fancy=0 # get the list of packages from the docker repo
+sudo -E apt-get update -y -o Dpkg::Progress-Fancy=0
 # The following command may fail with a post-install error if the system installed kernel updates
 # via apt upgrade but was not rebooted before installing docker-ce; however, even if this error
 # is reported, docker will work after reboot.

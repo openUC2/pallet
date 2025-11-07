@@ -1,0 +1,6 @@
+package: /deployments/infra/usb-automount.pkg
+features:
+  - noatime
+  - shared-mounts
+  - mount-cleanup
+disabled: false

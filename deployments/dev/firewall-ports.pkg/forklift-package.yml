@@ -1,0 +1,42 @@
+package:
+  description: Open firewall ports for developing/testing applications
+  maintainers:
+    - name: Ethan Li
+      email: lietk12@gmail.com
+  license: Apache-2.0
+  sources:
+    - https://github.com/openUC2/rpi-imswitch-os
+
+features:
+  firewall-allow-direct:
+    description:
+      Firewall configuration to allow requests from directly-connected devices
+    requires:
+      filesets:
+        - description: Drop-in directory for XML fragment files to generate the nm-shared zone definition
+          tags:
+            - drop-in-assembly
+          paths:
+            - /etc/firewalld/zones.d/nm-shared
+    provides:
+      file-exports:
+        - description: Definition for firewalld's dev service
+          target: overlays/etc/firewalld/services/dev.xml
+        - description: Drop-in XML fragment for firewalld's dev service
+          target: overlays/etc/firewalld/zones.d/nm-shared/70-service-dev.xml
+  firewall-allow-public:
+    description:
+      Firewall configuration to allow public requests
+    requires:
+      filesets:
+        - description: Drop-in directory for XML fragment files to generate the public zone definition
+          tags:
+            - drop-in-assembly
+          paths:
+            - /etc/firewalld/zones.d/public
+    provides:
+      file-exports:
+        - description: Definition for firewalld's dev service
+          target: overlays/etc/firewalld/services/dev.xml
+        - description: Drop-in XML fragment for firewalld's dev service
+          target: overlays/etc/firewalld/zones.d/public/70-service-dev.xml
