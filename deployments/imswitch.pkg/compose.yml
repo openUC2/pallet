@@ -1,6 +1,6 @@
 services:
   imswitch-noqt:
-    image: ghcr.io/openuc2/imswitch-noqt:sha-sha-1dd064d@sha256:327a3be0d1e3ddcae54988fc94311960ab4bf8302fb29ab7ef92e18d53b66db9
+    image: ghcr.io/openuc2/imswitch-noqt:sha-f6b3cac@sha256:dd6a09cd027ef1a86cb082215d33e45208d55d99ed9d57d9583657964bfed475
     privileged: true
     ports:
       - "8001:8001" # frontend, HTTP API, WebSockets API
@@ -18,8 +18,8 @@ services:
       - UPDATE_GIT=0
       - UPDATE_CONFIG=0
       - DATA_PATH=/datasets
-      - SCAN_EXT_DATA_FOLDER=1
-      - EXT_DRIVE_MOUNT=/media
+      - SCAN_EXT_DATA_PATH=1
+      - EXT_DATA_PATH=/media
       - SSL=0
     restart: always
   volume-setup:
