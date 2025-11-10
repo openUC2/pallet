@@ -1,5 +1,7 @@
 package: /deployments/networking/networkmanager/wifi-hotspot.pkg
 features:
+  - dhcp-default-route
+  - dhcp-captive-portal
   - wlan0
   - wlan0-localization
   - wlan0-ssid
@@ -10,5 +12,4 @@ features:
   - wlan1-ssid
   - wlan1-branded-password
   - wlan1-direct-ip-address
-  - dhcp-default-route
 disabled: false

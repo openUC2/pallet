@@ -22,8 +22,15 @@ features:
       wlan0 & wlan1
     provides:
       file-exports:
-        - description: Sets DHCP settings on the eth0 & eth1 interfaces
+        - description: Sets DHCP settings on the wlan0 & wlan1 interfaces
           target: overlays/etc/NetworkManager/dnsmasq-shared.d/35-dhcp-default-route-wlan.conf
+  dhcp-captive-portal:
+    description:
+      Configure dnsmasq's DHCP server to advertise the landing page as a captive portal
+    provides:
+      file-exports:
+        - description: Sets DHCP settings on the wlan0 & wlan1 interfaces
+          target: overlays/etc/NetworkManager/dnsmasq-shared-templates.d/40-dhcp-captive-portal-wlan.conf
   wlan0:
     description: Provide a Wi-Fi hotspot on the internal Wi-Fi module (wlan0)
     requires:
