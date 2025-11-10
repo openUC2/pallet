@@ -65,6 +65,13 @@ features:
       file-exports:
         - description: Sets DHCP settings on the eth0 & eth1 interfaces
           target: overlays/etc/NetworkManager/dnsmasq-shared.d/35-dhcp-default-route-eth.conf
+  dhcp-captive-portal:
+    description:
+      Configure dnsmasq's DHCP server to advertise the landing page as a captive portal
+    provides:
+      file-exports:
+        - description: Sets DHCP settings on the eth0 & eth1 interfaces
+          target: overlays/etc/NetworkManager/dnsmasq-shared-templates.d/40-dhcp-captive-portal-eth.conf
   custom-domain:
     description: Handle DNS requests for a custom domain set by /etc/custom-domain
     provides:
