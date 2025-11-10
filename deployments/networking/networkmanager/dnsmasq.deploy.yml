@@ -1,6 +1,7 @@
 package: /deployments/networking/networkmanager/dnsmasq.pkg
 features:
   - dhcp-default-route
+  - dhcp-captive-portal
   - custom-domain
   - branded-custom-domain
 disabled: false
