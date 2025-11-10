@@ -1,6 +1,7 @@
 services:
+
   imswitch-noqt:
-    image: ghcr.io/openuc2/imswitch-noqt:sha-df1822e@sha256:b0fc64e0c75ca4098754c89bf95d7374b42e8a78fb59bc21bf158d99d482b9b9
+    image: ghcr.io/openuc2/imswitch-noqt:sha-e3a3bfa@sha256:74aca5073627637b0c454795fb69a940988da583cc27dce3363f6c05eaa2d828
     privileged: true
     ports:
       - "8001:8001" # frontend, HTTP API, WebSockets API
@@ -22,6 +23,7 @@ services:
       - EXT_DATA_PATH=/media
       - SSL=0
     restart: always
+
   volume-setup:
     # This service ensures that root isn't the owner of /home/pi/Datasets, since Docker auto-creates
     # that path if it didn't exist before for the bind mount, and Docker creates such directories
