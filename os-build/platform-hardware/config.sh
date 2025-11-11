@@ -4,6 +4,7 @@
 # Raspberry Pi 4 running Raspberry Pi OS 11 or newer.
 # Hopefully, in the future other platforms will also be supported - in which case alternative OS
 # build scripts will be needed for configuration.
+config_files_root="$(dirname "$(realpath "$BASH_SOURCE")")"
 
 # Note: in general, 0 represents "success/yes/selected", while 1 represents "failed/no/unselected",
 # but there is no consistent meaning. Partial documentation of raspi-commands is available at
@@ -29,3 +30,7 @@ sudo raspi-config nonint do_serial_cons 0
 
 # The following command disables legacy camera support so that we can use libcamera:
 sudo raspi-config nonint do_legacy 1
+
+# Add config.txt configuration for the openUC2 HAT+
+file="/boot/firmware/config.txt"
+sudo bash -c "cat \"$config_files_root$file.snippet\" >> \"$file\""
