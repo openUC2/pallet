@@ -1,10 +1,4 @@
-#!/bin/bash -eu
-
-# Note(ethanjli) this is debugging code to try to reproducibly induce a race condition between
-# generate-machine-name and generate-hostname-templated, since I've observed that systemd sometimes
-# starts generate-hostname-templated before it starts generate-machine-name even though I've set up
-# an After= dependency between the two in generate-hostname-templated!
-sleep 1
+#!/bin/bash -u
 
 machine_name=""
 
@@ -40,9 +34,11 @@ fi
 if [ "$machine_name" = "" ]; then
   echo "Warning: a machine name could not be generated!"
   if [ -f /run/machine-name ]; then
-    echo "Using default machine name: $(cat /run/machine-name)"
+    machine_name="$(cat /run/machine-name)"
+  else
+    machine_name="unknown"
   fi
-  exit 1
+  echo "Using default machine name: $machine_name"
 fi
 
 echo "Machine name: $machine_name"
