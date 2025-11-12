@@ -1,5 +1,11 @@
 #!/bin/bash -eu
 
+# Note(ethanjli) this is debugging code to try to reproducibly induce a race condition between
+# generate-machine-name and generate-hostname-templated, since I've observed that systemd sometimes
+# starts generate-hostname-templated before it starts generate-machine-name even though I've set up
+# an After= dependency between the two in generate-hostname-templated!
+sleep 5
+
 machine_name=""
 
 # Allow preempting automatic machine-name generation behavior with /etc/machine-name:
