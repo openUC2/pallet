@@ -18,6 +18,7 @@ ExecStart=sh -c "\
     /usr/libexec/render-templated-config \
       >/run/overlays/generated/etc/NetworkManager/dnsmasq-shared.d/40-generated-templated-config.conf \
 "
+RemainAfterExit=yes
 
 [Install]
 WantedBy=NetworkManager.service

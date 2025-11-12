@@ -9,6 +9,7 @@ Before=cockpit.service
 [Service]
 Type=oneshot
 ExecStart=/usr/libexec/assemble-cockpit-config
+RemainAfterExit=yes
 
 [Install]
 WantedBy=multi-user.target

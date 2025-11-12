@@ -12,6 +12,7 @@ Before=systemd-hostnamed.service
 [Service]
 Type=oneshot
 ExecStart=/usr/libexec/generate-hostname-templated
+RemainAfterExit=yes
 
 [Install]
 WantedBy=sysinit.target

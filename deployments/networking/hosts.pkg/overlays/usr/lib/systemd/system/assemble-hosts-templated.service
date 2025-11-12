@@ -19,3 +19,4 @@ ExecStart=sh -c "\
     /usr/libexec/render-templated-config \
       >/run/overlays/generated/etc/hosts.d/50-generated-templated \
 "
+RemainAfterExit=yes

@@ -13,6 +13,7 @@ ExecStart=bash -c -e '\
     chmod 600 "$file"; \
   done \
 '
+RemainAfterExit=yes
 
 [Install]
 WantedBy=NetworkManager.service

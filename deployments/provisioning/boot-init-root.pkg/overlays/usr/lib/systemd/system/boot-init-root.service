@@ -8,6 +8,7 @@ After=boot-init-root-extract-archives.service
 Type=oneshot
 ExecStart=sh -c 'cp -r /boot/firmware/init-root/* /'
 ExecStartPost=sh -c 'rm -rf /boot/firmware/init-root/*'
+RemainAfterExit=yes
 Restart=no
 
 [Install]

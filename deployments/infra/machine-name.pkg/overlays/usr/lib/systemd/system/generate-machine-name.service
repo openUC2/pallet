@@ -11,6 +11,7 @@ Before=systemd-hostnamed.service
 Type=oneshot
 Environment="LANG=en_US.UTF-8"
 ExecStart=/usr/libexec/generate-machine-name
+RemainAfterExit=yes
 
 [Install]
 WantedBy=sysinit.target

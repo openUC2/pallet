@@ -8,6 +8,7 @@ After=tailscaled.service
 Type=oneshot
 ExecStart=sh -c 'tailscale up --authkey "$(cat /var/lib/tailscale-auth-key)"'
 ExecStartPost=rm /var/lib/tailscale-auth-key
+RemainAfterExit=yes
 
 [Install]
 WantedBy=multi-user.target
