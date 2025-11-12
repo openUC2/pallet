@@ -1,4 +1,4 @@
-#!/bin/bash -eu
+#!/bin/bash -u
 
 machine_name=""
 
@@ -17,6 +17,7 @@ elif [ -f /sys/firmware/devicetree/base/serial-number ] && [ -x /usr/bin/machine
       # fall back to English in case the language setting is unrecognized:
       LANG=en_US.UTF-8 /usr/bin/machine-name name --format=hex --sn="$serial_number"
   )"
+  echo "Generated machine name from serial number $serial_number: $machine_name"
 fi
 
 if [ "$machine_name" = "" ] &&
@@ -29,14 +30,18 @@ if [ "$machine_name" = "" ] &&
       # fall back to English in case the language setting is unrecognized:
       LANG=en_US.UTF-8 /usr/bin/machine-name name --format=hex --sn="$serial_number"
   )"
+  echo "Generated machine name from hash of machine id $serial_number: $machine_name"
 fi
 
 if [ "$machine_name" = "" ]; then
-  echo "Warning: a machine name could not be generated!"
+  echo "Warning: a non-empty machine name could not be generated!"
   if [ -f /run/machine-name ]; then
-    echo "Using default machine name: $(cat /run/machine-name)"
+    machine_name="$(cat /run/machine-name)"
+    echo "Using previous machine name from /run/machine-name: $machine_name"
+  else
+    machine_name="unknown"
+    echo "Using default machine name: $machine_name"
   fi
-  exit 1
 fi
 
 echo "Machine name: $machine_name"

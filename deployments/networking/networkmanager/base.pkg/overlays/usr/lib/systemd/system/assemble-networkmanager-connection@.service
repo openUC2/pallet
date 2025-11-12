@@ -9,6 +9,7 @@ Before=NetworkManager.service
 [Service]
 Type=oneshot
 ExecStart=/usr/libexec/assemble-networkmanager-connection %i
+RemainAfterExit=yes
 
 [Install]
 WantedBy=NetworkManager.service

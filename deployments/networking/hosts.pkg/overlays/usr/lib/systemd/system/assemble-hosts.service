@@ -11,6 +11,7 @@ Before=network-pre.service
 [Service]
 Type=oneshot
 ExecStart=/usr/libexec/assemble-hosts
+RemainAfterExit=yes
 
 [Install]
 WantedBy=multi-user.target

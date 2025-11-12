@@ -4,21 +4,23 @@ machine_name=""
 
 if [ -f /run/machine-name ]; then
   machine_name="$(cat /run/machine-name)"
+  echo "Loaded machine name from /run/machine-name: $machine_name"
 fi
-if [ -z "$machine_name" ]; then
+if [ "$machine_name" = "" ]; then
   echo "Warning: no machine name was set at /run/machine-name! Falling back to 'unknown'."
   machine_name="unknown"
 fi
 
 if [ -f /etc/hostname-template ]; then
-  hostname="$(sed 's~#.*$~~g' /etc/hostname-template | tr -d '[:space:]')"
+  hostname_template="$(sed 's~#.*$~~g' /etc/hostname-template | tr -d '[:space:]')"
+  echo "Loaded hostname template from /etc/hostname-template: $hostname_template"
 else
   echo "Warning: no hostname template was set! Falling back to 'machine-{machine-name}."
-  hostname="machine-{machine-name}"
+  hostname_template="machine-{machine-name}"
 fi
 
-hostname="$(echo "$hostname" | sed "s~{machine-name}~${machine_name}~g")"
+hostname="$(echo "$hostname_template" | sed "s~{machine-name}~${machine_name}~g")"
 
 mkdir -p /run/overlays/generated/etc
 echo "Hostname: $hostname"
-printf "%s" "$hostname" > /run/overlays/generated/etc/hostname
+printf "%s" "$hostname" >/run/overlays/generated/etc/hostname
