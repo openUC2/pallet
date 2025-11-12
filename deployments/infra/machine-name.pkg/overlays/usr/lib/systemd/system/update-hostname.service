@@ -15,6 +15,7 @@ Type=oneshot
 # should # work for backwards-compatibility; in Debian bullseye `hostnamectl hostname` doesn't work,
 # and instead `hostnamectl set-hostname` must be used:
 ExecStart=sh -c 'hostnamectl set-hostname "$(cat /etc/hostname)"'
+RemainAfterExit=yes
 
 [Install]
 WantedBy=multi-user.target

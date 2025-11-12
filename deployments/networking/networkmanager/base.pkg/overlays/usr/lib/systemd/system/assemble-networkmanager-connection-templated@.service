@@ -17,3 +17,4 @@ ExecStart=sh -c "\
     /usr/libexec/render-templated-config \
       >/run/overlays/generated/etc/NetworkManager/system-connections.d/%i/40-generated-templated.nmconnection \
 "
+RemainAfterExit=yes

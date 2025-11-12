@@ -5,9 +5,9 @@ Description=Mount USB drive on %i
 User=pi
 Group=storage
 Type=oneshot
-RemainAfterExit=true
 # This prevents a race condition where udev triggers this service before udisksctl is actually ready
 # to mount the device (see https://github.com/storaged-project/udisks/issues/711 for details):
 ExecStartPre=/usr/libexec/wait-udisks-device "%i"
 ExecStart=udisksctl mount --no-user-interaction --block-device /dev/%i
 ExecStop=udisksctl unmount --no-user-interaction --block-device /dev/%i
+RemainAfterExit=true

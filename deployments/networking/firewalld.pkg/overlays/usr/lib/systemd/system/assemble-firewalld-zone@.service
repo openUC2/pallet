@@ -8,6 +8,7 @@ Before=NetworkManager.service
 [Service]
 Type=oneshot
 ExecStart=/usr/libexec/assemble-firewalld-zone %i
+RemainAfterExit=yes
 
 [Install]
 WantedBy=firewalld.service

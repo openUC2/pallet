@@ -9,9 +9,9 @@ ConditionPathExists=/var/lib/overlays/overrides/etc/fake-hwclock.data
 
 [Service]
 Type=oneshot
-RemainAfterExit=true
 ExecStart=sleep 1
 ExecStopPost=cp /var/lib/overlays/overrides/etc/fake-hwclock.data /etc/fake-hwclock.data
+RemainAfterExit=true
 
 [Install]
 WantedBy=overlay-etc.service
