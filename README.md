@@ -11,6 +11,17 @@ Raspberry Pi computers in the OS.
 
 These are usage instructions for developers.
 
+### Enabling `dx` (developer experience) mode
+
+Run:
+```
+bash "$(forklift plt locate-file dx/setup.sh)"
+```
+
+This will set up a development environment for locally developing and testing ImSwitch on your RPi.
+Note that you should only one this once per OS installation: if you run it multiple times on the
+same OS installation, things might break in weird ways.
+
 ### Integrating changes in ImSwitch
 
 1. Commit and push your changes to the [openUC2/ImSwitch](https://github.com/openUC2/ImSwitch) repo.

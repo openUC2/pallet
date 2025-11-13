@@ -64,14 +64,6 @@ else
   panic "$description"
 fi
 
-description="install ImSwitch"
-report_starting "$description"
-if "$build_scripts_root"/imswitch/install.sh; then
-  report_finished "$description"
-else
-  panic "$description"
-fi
-
 # Note: we must install Docker before we perform Forklift container image loading (which requires
 # either Docker or containerd, which is installed by Docker).
 description="install Docker"
